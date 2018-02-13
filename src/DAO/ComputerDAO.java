@@ -1,8 +1,8 @@
 package DAO;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import com.mysql.jdbc.Connection;
@@ -54,12 +54,21 @@ public class ComputerDAO {
 		while(results.next()) {
 			int id=results.getInt("id");
 			String name=results.getString("name");
-			Date introduced=results.getDate("introduced");
-			Date discontinued = results.getDate("discontinued");
+			LocalDate introduced;
+			if(results.getDate("introduced")!=null) {
+				introduced=results.getDate("introduced").toLocalDate();
+			}else{
+				introduced=null;
+			}
+			LocalDate discontinued;
+			if(results.getDate("discontinued")!=null) {
+				discontinued = results.getDate("discontinued").toLocalDate();
+			}else {
+				discontinued = null;
+			}
 			int company_id=results.getInt("company_id");
 			Computer c = new Computer(id, name, introduced, discontinued, company_id);
 			listComp.add(c);
-			//System.out.println(results.getString("name"));
 		}
 		
 		} catch (SQLException e) {
@@ -71,17 +80,17 @@ public class ComputerDAO {
 	}
 	
 	
-	public void createComputer(String name, Date introduced, Date discontinued, int company_id) {
-		Computer Comp = new Computer(0, name, introduced, discontinued, company_id); 		
+	public void createComputer(Computer comp) {
+				
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 		
-		query="insert into computer (name, introduced, discontinued, company_id) values ("+name+", "+introduced+", "+discontinued+", "+company_id+");";
+		
+		query="insert into computer (name, introduced, discontinued, company_id) values ('"+comp.getName()+"', '"+comp.getIntroduced()+"', '"+comp.getDiscontinued()+"', "+comp.getCompany_id()+");";
 		ResultSet keyResults;
 		
 		Statement stmt;
 		try {
 			stmt = (Statement) conn.createStatement();
-			//ResultSet results = 
 			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 			keyResults = stmt.getGeneratedKeys();
 	
@@ -91,8 +100,7 @@ public class ComputerDAO {
 			e.printStackTrace();
 		}
 		Connect.close();	
-	}
-	
+	}	
 	
 
 }

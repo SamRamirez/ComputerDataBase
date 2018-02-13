@@ -1,12 +1,14 @@
 package Bean;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 
 public class Computer {
 	
 	public int id;
 	public String name;
-	public Date introduced;
-	public Date discontinued;
+	public LocalDate introduced;
+	public LocalDate discontinued;
 	public int company_id;
 	
 
@@ -17,16 +19,26 @@ public class Computer {
 	}
 
 
-	public Computer(int id, String name, Date introduced, Date discontinued, int company_id) {
+//	public Computer(int id, String name, Date introduced, Date discontinued, int company_id) {
+//		super();
+//		this.id = id;
+//		this.name = name;
+//		this.introduced = introduced;
+//		this.discontinued = discontinued;
+//		this.company_id = company_id;
+//	}
+	
+	
+	public Computer(int i, String name2, LocalDate introduced2, LocalDate discontinued2, int company_id2) {
 		super();
-		this.id = id;
-		this.name = name;
-		this.introduced = introduced;
-		this.discontinued = discontinued;
-		this.company_id = company_id;
+		this.id = i;
+		this.name = name2;
+		this.introduced = introduced2;
+		this.discontinued = discontinued2;
+		this.company_id = company_id2;
 	}
-	
-	
+
+
 	public int getId() {
 		return id;
 	}
@@ -39,16 +51,16 @@ public class Computer {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Date getIntroduced() {
+	public LocalDate getIntroduced() {
 		return introduced;
 	}
-	public void setIntroduced(Date introduced) {
+	public void setIntroduced(LocalDate introduced) {
 		this.introduced = introduced;
 	}
-	public Date getDiscontinued() {
+	public LocalDate getDiscontinued() {
 		return discontinued;
 	}
-	public void setDiscontinued(Date discontinued) {
+	public void setDiscontinued(LocalDate discontinued) {
 		this.discontinued = discontinued;
 	}
 	public int getCompany_id() {
