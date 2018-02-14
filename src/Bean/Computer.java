@@ -19,6 +19,13 @@ public class Computer {
 	}
 	
 	
+	public Computer(String name2, LocalDate introduced2, int company_id2) {
+		super();
+		this.name = name2;
+		this.introduced = introduced2;
+		this.company_id = company_id2;
+	}
+	
 	public Computer(String name2, LocalDate introduced2, LocalDate discontinued2, int company_id2) {
 		super();
 		this.name = name2;

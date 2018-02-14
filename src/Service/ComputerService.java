@@ -22,7 +22,15 @@ public class ComputerService {
 	}
 	
 	public Computer createComputer(String name, LocalDate introduced, LocalDate discontinued, int company_id) {
-		Computer comp = new Computer(name, introduced, discontinued, company_id); 
+		Computer comp;
+		if(discontinued!=null) {
+			comp = new Computer(name, introduced, discontinued, company_id); 
+
+		}else {
+			comp = new Computer(name, introduced, company_id); 
+
+
+		}
 		compDAO.createComputer(comp);			
 		return comp;
 	}

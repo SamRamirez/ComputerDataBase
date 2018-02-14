@@ -25,42 +25,42 @@ public class MainTest {
 
 		
 		
-		
-		compService.createComputer("Abc", LocalDate.of(2000, 5, 26), LocalDate.of(2000, 5, 28), 3);
-		
-		
+		System.err.println("AAAA");
+		compService.createComputer("Abc", LocalDate.of(2000, 5, 26), null, 3);
 		
 		
 		
-		listComp = compService.listComputer();
-		for(int i =0; i<listComp.size(); i++) {
-			System.out.print(listComp.get(i).getId());
-			System.out.print(" "+listComp.get(i).getName());
-			System.out.print(" "+listComp.get(i).getIntroduced());
-			
-			System.out.println();
-		}
 		
 		
-		//print
-		Computer compx=compService.infoComp(613);
-		//modif
-		compService.updateComp(613, "Gateway", compx.getIntroduced(), compx.getDiscontinued(), compx.getCompany_id());
-		//print
-		Computer compz=compService.infoComp(613);
-		
-		compService.deleteComp(613);
-		
-		
-
-		CompanyService companyService= CompanyService.getInstance();
-		ArrayList<Company> listCompany = companyService.listCompany();
-		for(int i =0; i<listCompany.size(); i++) {
-			System.out.print(listCompany.get(i).getId());
-			System.out.print(" "+listCompany.get(i).getName());
-			
-			System.out.println();
-		}
+//		listComp = compService.listComputer();
+//		for(int i =0; i<listComp.size(); i++) {
+//			System.out.print(listComp.get(i).getId());
+//			System.out.print(" "+listComp.get(i).getName());
+//			System.out.print(" "+listComp.get(i).getIntroduced());
+//			
+//			System.out.println();
+//		}
+//		
+//		
+//		//print
+//		Computer compx=compService.infoComp(613);
+//		//modif
+//		compService.updateComp(613, "Gateway", compx.getIntroduced(), compx.getDiscontinued(), compx.getCompany_id());
+//		//print
+//		Computer compz=compService.infoComp(613);
+//		
+//		compService.deleteComp(613);
+//		
+//		
+//
+//		CompanyService companyService= CompanyService.getInstance();
+//		ArrayList<Company> listCompany = companyService.listCompany();
+//		for(int i =0; i<listCompany.size(); i++) {
+//			System.out.print(listCompany.get(i).getId());
+//			System.out.print(" "+listCompany.get(i).getName());
+//			
+//			System.out.println();
+//		}
 		
 
 	}
