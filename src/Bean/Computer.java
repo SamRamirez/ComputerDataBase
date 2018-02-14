@@ -17,21 +17,19 @@ public class Computer {
 	public Computer() {
 		super();
 	}
-
-
-//	public Computer(int id, String name, Date introduced, Date discontinued, int company_id) {
-//		super();
-//		this.id = id;
-//		this.name = name;
-//		this.introduced = introduced;
-//		this.discontinued = discontinued;
-//		this.company_id = company_id;
-//	}
 	
 	
-	public Computer(int i, String name2, LocalDate introduced2, LocalDate discontinued2, int company_id2) {
+	public Computer(String name2, LocalDate introduced2, LocalDate discontinued2, int company_id2) {
 		super();
-		this.id = i;
+		this.name = name2;
+		this.introduced = introduced2;
+		this.discontinued = discontinued2;
+		this.company_id = company_id2;
+	}
+	
+	public Computer(int id, String name2, LocalDate introduced2, LocalDate discontinued2, int company_id2) {
+		super();
+		this.id=id;
 		this.name = name2;
 		this.introduced = introduced2;
 		this.discontinued = discontinued2;

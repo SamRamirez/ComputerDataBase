@@ -22,9 +22,26 @@ public class ComputerService {
 	}
 	
 	public Computer createComputer(String name, LocalDate introduced, LocalDate discontinued, int company_id) {
-				Computer comp = new Computer(0, name, introduced, discontinued, company_id); 
-				compDAO.createComputer(comp);			
+		Computer comp = new Computer(name, introduced, discontinued, company_id); 
+		compDAO.createComputer(comp);			
 		return comp;
+	}
+	
+	public Computer infoComp(int id) {
+		Computer toReturn = compDAO.infoComp(id).orElse(new Computer());
+		System.out.println("infos du computer d'id "+id+" : "+toReturn.getName()+" "+toReturn.getIntroduced()+" "+toReturn.getDiscontinued()+" "+toReturn.getCompany_id());
+		return toReturn;		
+	}
+	
+	public Computer updateComp(int id, String name, LocalDate introduced, LocalDate discontinued, int company_id) {
+		Computer comp = new Computer(id, name, introduced, discontinued, company_id); 
+		compDAO.updateComp(comp);
+		return comp;		
+	}
+	
+	public void deleteComp(int id) {
+		//passer en parametre de delete un computer plutot qu'un id?  ca sert? ca sert à retourner l'ordi effacé sans refaire de requete?	
+		compDAO.deleteComp(id);
 	}
 
 }
