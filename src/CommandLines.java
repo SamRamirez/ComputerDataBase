@@ -72,12 +72,12 @@ public class CommandLines {
 					int indexVirgule1=entry.indexOf(",");
 					int indexVirgule2=indexVirgule1+1+entry.substring(indexVirgule1+1).indexOf(",");
 					int indexVirgule3=indexVirgule2+1+entry.substring(indexVirgule2+1).indexOf(",");
-					System.out.println("0 à virgule1 "+entry.substring(0, indexVirgule1));
-					System.out.println(indexVirgule1);
-					System.out.println("virgule1 à virgule2 "+entry.substring(indexVirgule1+1, indexVirgule2));
-					System.out.println(indexVirgule2);
-					System.out.println("virgule2 à virgule3 "+entry.substring(indexVirgule2, indexVirgule3));
-					System.out.println(indexVirgule3);
+//					System.out.println("0 à virgule1 "+entry.substring(0, indexVirgule1));
+//					System.out.println(indexVirgule1);
+//					System.out.println("virgule1 à virgule2 "+entry.substring(indexVirgule1+1, indexVirgule2));
+//					System.out.println(indexVirgule2);
+//					System.out.println("virgule2 à virgule3 "+entry.substring(indexVirgule2, indexVirgule3));
+//					System.out.println(indexVirgule3);
 					
 					
 					name="\""+entry.substring(entry.indexOf("(")+1, indexVirgule1)+"\"";

@@ -1,5 +1,7 @@
 package DAO;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -19,9 +21,13 @@ public class ComputerDAO {
 	public static ComputerDAO getInstance() {
 		return instance;
 	}
-
-	//ce parametre ne semble servir à rien
-	private String query;
+	
+	//à supprimer à terme
+	String query;
+	
+	String queryCreateComputer = "INSERT INTO computer (name, introduced, discontinued, company_id)  VALUES (?, ?, ?, ?)";
+   
+	
 
 	public String getQuery() {
 		return query;
@@ -78,18 +84,31 @@ public class ComputerDAO {
 
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 
-		query = "insert into computer (name, introduced, discontinued, company_id) values ('" + comp.getName() + "', '"
-				+ comp.getIntroduced() + "', '" + comp.getDiscontinued() + "', " + comp.getCompany_id() + ");";
-		// pas utile?
-		// ResultSet keyResults;
+//		query = "insert into computer (name, introduced, discontinued, company_id) values ('" + comp.getName() + "', '"
+//				+ comp.getIntroduced() + "', '" + comp.getDiscontinued() + "', " + comp.getCompany_id() + ");";
+
 
 		Statement stmt;
 		try {
-			stmt = (Statement) conn.createStatement();
-			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+	        PreparedStatement pstmt = conn.prepareStatement(queryCreateComputer);
+	        
+	        pstmt.setString(1, comp.getName());
+	        if(comp.getIntroduced()!=null) {
+	        	pstmt.setDate(2, Date.valueOf(comp.getIntroduced()));
+	        }else {
+	        	pstmt.setDate(2, null);
+	        }
+	        if(comp.getDiscontinued()!=null) {
+	        	pstmt.setDate(3, Date.valueOf(comp.getDiscontinued()));
+	        }else {
+	        	pstmt.setDate(3, null);
+	        }
+	        pstmt.setInt(4, comp.getCompany_id());
+	        pstmt.executeUpdate();
+//			stmt = (Statement) conn.createStatement();
+//			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 			
-			// pas utile?
-			// keyResults = stmt.getGeneratedKeys();
+
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

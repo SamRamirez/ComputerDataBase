@@ -25,7 +25,6 @@ public class MainTest {
 
 		
 		
-		System.err.println("AAAA");
 		compService.createComputer("Abc", LocalDate.of(2000, 5, 26), null, 3);
 		
 		
