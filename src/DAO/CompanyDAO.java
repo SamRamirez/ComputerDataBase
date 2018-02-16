@@ -2,14 +2,12 @@ package DAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
+import com.mysql.jdbc.PreparedStatement;
 
 import Bean.Company;
-import Bean.Computer;
 import connection.Connect;
 
 public class CompanyDAO {
@@ -19,18 +17,19 @@ public class CompanyDAO {
 	public static CompanyDAO getInstance() {
 		return instance;
 	}
+	
+	String queryListCompany = "select id, name from company";
+
 
 	public ArrayList<Company> listCompany() {
 		ArrayList<Company> listComp = new ArrayList<Company>();
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 
-		String query = "select id, name from company;";
-
-		Statement stmt;
+		PreparedStatement pstmt;
 		try {
-			stmt = (Statement) conn.createStatement();
+			pstmt = (PreparedStatement) conn.prepareStatement(queryListCompany);
 
-			ResultSet results = stmt.executeQuery(query);
+			ResultSet results = pstmt.executeQuery();
 			while (results.next()) {
 				int id = results.getInt("id");
 				String name = results.getString("name");

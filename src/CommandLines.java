@@ -18,8 +18,7 @@ public class CommandLines {
 		LocalDate discontinued;
 		Scanner sc;
 		String entry="";
-		System.out.println("Fonctions disponibles :\n - list computers ()\n - list companies ()\n - computer details (id)\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company)\n - update computer (id, name, introduced, discontinued)\n - update computer (id, name, introduced, discontinued, id_company)\n - delete computer (id)\n - info computer (id)\n - exit ()");
-		System.out.println("pour set un champ à null en faisant update computer, il faut ecrire null pour les dates et chaines de caractères et 0 pour les entiers");
+		System.out.println("Fonctions disponibles :\n - list computers ()\n - list companies ()\n - computer details (id)\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company(/0))\n - update computer (id, name, introduced(/null), discontinued(/null))\n - update computer (id, name, introduced(/null), discontinued(/null), id_company(/0))\n - delete computer (id)\n - info computer (id)\n - exit ()");
 		System.out.println("les dates sont au format aaaa-mm-dd");
 		System.out.println("ENTREZ LA COMMANDE");
 		int id=0;
@@ -77,7 +76,7 @@ public class CommandLines {
 						int indexVirgule1=entry.indexOf(",");
 						int indexVirgule2=indexVirgule1+1+entry.substring(indexVirgule1+1).indexOf(",");
 						int indexVirgule3=indexVirgule2+1+entry.substring(indexVirgule2+1).indexOf(",");
-						name="\""+entry.substring(entry.indexOf("(")+1, indexVirgule1)+"\"";
+						name=entry.substring(entry.indexOf("(")+1, indexVirgule1);
 						//company_id=Integer.parseInt(entry.substring(indexVirgule3, entry.indexOf(")")));
 						//3 ou 2 args
 						if(indexVirgule3==indexVirgule2) {
@@ -133,20 +132,36 @@ public class CommandLines {
 							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), computerReferant.getCompany_id());
 						break;
 						case 2 :
-							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2));
+							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
 							company_id=Integer.parseInt(entry.substring(listePositionsVirgules.get(2)+1, entry.length()-1));
 							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), company_id);
 						break;
 						case 3 : 
-							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2));
-							introduced=LocalDate.parse(entry.substring(listePositionsVirgules.get(2)+1, listePositionsVirgules.get(3)));
-							discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, entry.length()-1));
+							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
+							if(entry.substring(listePositionsVirgules.get(2)+1, listePositionsVirgules.get(3)-1).equals("null")) {
+								introduced=null;
+							}else {
+								introduced=LocalDate.parse(entry.substring(listePositionsVirgules.get(2)+1, listePositionsVirgules.get(3)-1));
+							}
+							if(entry.substring(listePositionsVirgules.get(3)+1, entry.length()-1).equals("null")) {	
+								discontinued=null;
+							}else {
+								discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, entry.length()-1));
+							}	
 							computerService.updateComp(id, name, introduced, discontinued, computerReferant.getCompany_id());
 						break;
 						case 4 : 
-							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2));
-							introduced=LocalDate.parse(entry.substring(listePositionsVirgules.get(2)+1, listePositionsVirgules.get(3)-1));
-							discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, listePositionsVirgules.get(4)-1));
+							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
+							if(entry.substring(listePositionsVirgules.get(2)+1, listePositionsVirgules.get(3)-1).equals("null")) {
+								introduced=null;
+							}else {
+								introduced=LocalDate.parse(entry.substring(listePositionsVirgules.get(2)+1, listePositionsVirgules.get(3)-1));
+							}
+							if(entry.substring(listePositionsVirgules.get(3)+1, listePositionsVirgules.get(4)-1).equals("null")) {	
+								discontinued=null;
+							}else {
+								discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, listePositionsVirgules.get(4)-1));
+							}	
 							company_id=Integer.parseInt( entry.substring(listePositionsVirgules.get(4)+1, entry.length()-1) );
 							computerService.updateComp(id, name, introduced, discontinued, company_id);
 						break;

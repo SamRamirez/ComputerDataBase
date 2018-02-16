@@ -4,14 +4,12 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLType;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
 
 import Bean.Computer;
 import connection.Connect;
@@ -178,47 +176,55 @@ public class ComputerDAO {
 	
 	
 	
+//	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
+
+	
 	//Ne serais-ce pas bien de signaler à l'utilisateur que l'ordi à modifier n'existe pas dans le cas ou l'id ne correspond à aucun computer?
 	public Computer updateComp(Computer comp) {
-		Computer toReturn=comp;
 		
 		//query = "UPDATE computer SET name = '"+comp.getName()+"' ";
 		
 		
 		
-		query=query+"WHERE id = '"+comp.getId()+"' ;";
+		//query=query+"WHERE id = '"+comp.getId()+"' ;";
 		
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 		
 		PreparedStatement pstmt;
 		try {
 			pstmt = (PreparedStatement) conn.prepareStatement(queryUpdateComputer);
-			pstmt.executeUpdate();
-			LocalDate introduced;
+			pstmt.setInt(5, comp.getId());
+			pstmt.setString(1, comp.getName());
+			//LocalDate introduced;
 			if (comp.getIntroduced() != null) {
-				introduced = comp.getIntroduced();
+				//introduced = comp.getIntroduced();
 				//query=query+", introduced = '"+introduced+"' "; 
 	        	pstmt.setDate(2, Date.valueOf(comp.getIntroduced()));
-//	        	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
-
-
 			} else {
-				introduced = null;
+				//introduced = null;
+	        	pstmt.setDate(2, null);
 			}
-			LocalDate discontinued;
+			//LocalDate discontinued;
 			if (comp.getDiscontinued() != null) {
-				discontinued = comp.getDiscontinued();
-				query=query+", discontinued = '"+discontinued+"' "; 
+				//discontinued = comp.getDiscontinued();
+				//query=query+", discontinued = '"+discontinued+"' "; 
+				pstmt.setDate(3, Date.valueOf(comp.getDiscontinued()));
 			} else {
-				discontinued = null;
+				//discontinued = null;
+	        	pstmt.setDate(3, null);
 			}
-			
+			if (comp.getCompany_id()!=0) {
+				pstmt.setInt(4, comp.getCompany_id());
+			}else {
+				pstmt.setNull(4, Types.INTEGER);
+			}
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Connect.close();
-		return toReturn;
+		return comp;
 	}
 	
 	
@@ -230,10 +236,11 @@ public class ComputerDAO {
 		
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 		
-		PreparedStatement stmt;
+		PreparedStatement pstmt;
 		try {
-			stmt = conn.prepareStatement(queryDeleteComputer);
-			stmt.executeUpdate();
+			pstmt = conn.prepareStatement(queryDeleteComputer);
+			pstmt.setInt(1, id);
+			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
