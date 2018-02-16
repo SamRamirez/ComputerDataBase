@@ -22,9 +22,6 @@ public class ComputerDAO {
 		return instance;
 	}
 	
-	//à supprimer à terme
-	String query;
-	
 	
 	String queryListComputers = "SELECT id, name, introduced, discontinued, company_id FROM computer";
 	String queryCreateComputer = "INSERT INTO computer (name, introduced, discontinued, company_id)  VALUES (?, ?, ?, ?)";
@@ -32,29 +29,15 @@ public class ComputerDAO {
 	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	String queryDeleteComputer = "DELETE from computer WHERE id = ?";
 
-	
-
-	public String getQuery() {
-		return query;
-	}
-
-	public void setQuery(String query) {
-		this.query = query;
-	}
 
 	private ComputerDAO() {
-		query = "";
 	}
 
 	public ArrayList<Computer> listComputer() {
 		ArrayList<Computer> listComp = new ArrayList<Computer>();
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 
-//		query = "select id, name, introduced, discontinued, company_id from computer;";
-//
-//		Statement stmt;
 		try {
-			//stmt = (Statement) conn.createStatement();
 	        PreparedStatement pstmt = conn.prepareStatement(queryListComputers);
 
 			ResultSet results = pstmt.executeQuery();
@@ -90,11 +73,6 @@ public class ComputerDAO {
 
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 
-//		query = "insert into computer (name, introduced, discontinued, company_id) values ('" + comp.getName() + "', '"
-//				+ comp.getIntroduced() + "', '" + comp.getDiscontinued() + "', " + comp.getCompany_id() + ");";
-
-
-		//Statement stmt;
 		try {
 	        PreparedStatement pstmt = conn.prepareStatement(queryCreateComputer);
 	        
@@ -115,8 +93,6 @@ public class ComputerDAO {
 	        	pstmt.setNull(4, Types.INTEGER);
 	        }
 	        pstmt.executeUpdate();
-//			stmt = (Statement) conn.createStatement();
-//			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -125,7 +101,6 @@ public class ComputerDAO {
 	}
 
 	public Optional<Computer> infoComp(int id) {
-		//query = "select name, introduced, discontinued, company_id from computer where id='" + id + "';";
 
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 
@@ -172,21 +147,11 @@ public class ComputerDAO {
 
 		return Optional.ofNullable(comp);
 	}
-	
-	
-	
-	
-//	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
+
 
 	
 	//Ne serais-ce pas bien de signaler à l'utilisateur que l'ordi à modifier n'existe pas dans le cas ou l'id ne correspond à aucun computer?
 	public Computer updateComp(Computer comp) {
-		
-		//query = "UPDATE computer SET name = '"+comp.getName()+"' ";
-		
-		
-		
-		//query=query+"WHERE id = '"+comp.getId()+"' ;";
 		
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 		
@@ -195,22 +160,14 @@ public class ComputerDAO {
 			pstmt = (PreparedStatement) conn.prepareStatement(queryUpdateComputer);
 			pstmt.setInt(5, comp.getId());
 			pstmt.setString(1, comp.getName());
-			//LocalDate introduced;
 			if (comp.getIntroduced() != null) {
-				//introduced = comp.getIntroduced();
-				//query=query+", introduced = '"+introduced+"' "; 
 	        	pstmt.setDate(2, Date.valueOf(comp.getIntroduced()));
 			} else {
-				//introduced = null;
 	        	pstmt.setDate(2, null);
 			}
-			//LocalDate discontinued;
 			if (comp.getDiscontinued() != null) {
-				//discontinued = comp.getDiscontinued();
-				//query=query+", discontinued = '"+discontinued+"' "; 
 				pstmt.setDate(3, Date.valueOf(comp.getDiscontinued()));
 			} else {
-				//discontinued = null;
 	        	pstmt.setDate(3, null);
 			}
 			if (comp.getCompany_id()!=0) {
@@ -231,8 +188,6 @@ public class ComputerDAO {
 	
 	//ca serait pas mal de dire à l'utilisateur si rien n'a ete effacé
 	public void deleteComp(int id) {
-		
-		//query = "DELETE from computer WHERE id = '"+id+"' ;";
 		
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 		

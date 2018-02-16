@@ -14,34 +14,10 @@ import DAO.ComputerDAO;
 
 public class Connect {
 	
-//	static String query = "select * from computer;";
-//	static ResultSet results;
 	
 	static Connection conn;
 	static String url;
 	
-	
-//	public static void main(String args[]) {
-//		try {
-//			Class.forName("com.mysql.jdbc.Driver");
-//			String url = "jdbc:mysql://127.0.0.1:3306/computer-database-db?useSSL=false";
-//			Connection conn = DriverManager.getConnection(url,"admincdb","qwerty1234");
-//			Statement stmt = (Statement) conn.createStatement();
-//			results = stmt.executeQuery(query);
-//			while(results.next()) {
-//				System.out.println(results.getString("name"));
-//			}
-//			conn.close();
-//		} catch (ClassNotFoundException | SQLException e) {
-//			e.printStackTrace();
-//		}
-//	}
-	
-	
-	
-//	public static Connection getConn() {
-//		return conn;
-//	}
 
 	public static void setConn(Connection conn) {
 		Connect.conn = conn;

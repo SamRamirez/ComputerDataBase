@@ -47,17 +47,7 @@ public class ComputerService {
 	}
 	
 	public Computer updateComp(int id, String name, LocalDate introduced, LocalDate discontinued, int company_id) {
-		Computer comp;
-//		if(introduced.toString().equals("null")) {
-//			
-//		}
-//		if(discontinued.toString().equals("null")) {
-//			
-//		}
-//		if(company_id == 0) {
-//			
-//		}
-		
+		Computer comp;		
 		comp = new Computer(id, name, introduced, discontinued, company_id); 
 		compDAO.updateComp(comp);
 		return comp;		

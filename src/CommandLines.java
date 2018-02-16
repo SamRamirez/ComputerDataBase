@@ -13,22 +13,27 @@ public class CommandLines {
 	static ComputerService computerService= ComputerService.getInstance();
 	static CompanyService companyService= CompanyService.getInstance();
 	
+	private void listComputers() {
+		
+	}
+	
 	public static void main(String[] args) {
 		LocalDate introduced;
 		LocalDate discontinued;
 		Scanner sc;
 		String entry="";
-		System.out.println("Fonctions disponibles :\n - list computers ()\n - list companies ()\n - computer details (id)\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company(/0))\n - update computer (id, name, introduced(/null), discontinued(/null))\n - update computer (id, name, introduced(/null), discontinued(/null), id_company(/0))\n - delete computer (id)\n - info computer (id)\n - exit ()");
+		System.out.println("Fonctions disponibles :\n - list computers ()\n - list companies ()\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company(/0))\n - update computer (id, name, introduced(/null), discontinued(/null))\n - update computer (id, name, introduced(/null), discontinued(/null), id_company(/0))\n - delete computer (id)\n - info computer (id)\n - exit ()");
 		System.out.println("les dates sont au format aaaa-mm-dd");
 		System.out.println("ENTREZ LA COMMANDE");
 		int id=0;
-		while(!(entry.equals("exit"))) {
+		//while(!(entry.equals("exit"))) {
+		while( !(Command.fromNameToEnum(entry)!=null)  || !(Command.fromNameToEnum(entry).equals(Command.EXIT))) {	
 			sc= new Scanner(System.in);
 			entry = sc.nextLine();
 			
 			String entryParsed = entry.substring(0, entry.indexOf("(")+1);
-			switch(entryParsed) {
-			case "list computers (" : 
+			switch(Command.fromNameToEnum(entryParsed)) {
+			case LIST_COMPUTERS : 
 				ArrayList<Computer> listComp = computerService.listComputer();
 				for(int i =0; i<listComp.size(); i++) {
 					System.out.print(listComp.get(i).getId());
@@ -37,7 +42,7 @@ public class CommandLines {
 					System.out.println();
 				}
 				break;
-			case "list companies ("	:
+			case LIST_COMPANIES	:
 				ArrayList<Company> listCompany = companyService.listCompany();
 				for(int i =0; i<listCompany.size(); i++) {
 					System.out.print(listCompany.get(i).getId());
@@ -45,17 +50,7 @@ public class CommandLines {
 					System.out.println();
 				}
 				break;
-			case "computer details ("	:
-				System.out.println("computer details");
-				System.out.println(entry);
-				System.out.println(entryParsed);
-				id = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.length()-1));
-				//attention, on ne fait rien du return la
-				computerService.infoComp(id);	
-				break;
-			case "create computer ("	:
-				//name, introduced, discontinued, company_id)
-				
+			case CREATE_COMPUTER :				
 				String name = "";
 				int company_id=0;
 				
@@ -86,10 +81,14 @@ public class CommandLines {
 								computerService.createComputer(name, null, null, company_id);
 							}else {
 								//traitement pour 3 arguments
-								introduced = LocalDate.parse(entry.substring(indexVirgule1+2, indexVirgule2));
-								discontinued=null;
-								company_id = Integer.parseInt(entry.substring(indexVirgule2+2, entry.length()-1));
-								computerService.createComputer(name, introduced, discontinued, company_id);
+								try {
+									introduced = LocalDate.parse(entry.substring(indexVirgule1+2, indexVirgule2));
+									discontinued=null;
+									company_id = Integer.parseInt(entry.substring(indexVirgule2+2, entry.length()-1));
+									computerService.createComputer(name, introduced, discontinued, company_id);
+								}catch(Exception e){
+									System.out.println("entree non valide");
+								}	
 								
 							}
 						}else {
@@ -102,7 +101,7 @@ public class CommandLines {
 					}
 				}	
 				break;
-			case "update computer (" :	
+			case UPDATE_COMPUTER :	
 				//id, parameters to change)
 				int nombreAttributs = (Computer.class.getDeclaredFields()).length;
 				//attention if faut mettre une erreur dans le cas ou le premier argument n'est pas un nombre?
@@ -110,15 +109,10 @@ public class CommandLines {
 				int lastPos = 0;
 				listePositionsVirgules.add(lastPos);
 				while(entry.substring(lastPos).indexOf(",") != -1) {	
-//					System.out.println();
-//					System.out.println(listePositionsVirgules.get(listePositionsVirgules.size()-1));
-//					System.out.println(entry.substring(listePositionsVirgules.get(listePositionsVirgules.size()-1)));
 					
 					
 					lastPos=listePositionsVirgules.get(listePositionsVirgules.size()-1)+1+entry.substring(listePositionsVirgules.get(listePositionsVirgules.size()-1)).indexOf(",");
-					listePositionsVirgules.add(lastPos);
-//					System.err.println("nb "+listePositionsVirgules.size());
-//					System.err.println("pos "+listePositionsVirgules.get(listePositionsVirgules.size()-1));			
+					listePositionsVirgules.add(lastPos);		
 				}	
 				if(nombreAttributs<listePositionsVirgules.size()-1 || listePositionsVirgules.size()-1<=0) {
 					System.out.println("trop d'arguments ou aucun argument");
@@ -170,15 +164,13 @@ public class CommandLines {
 					}	
 				}			
 				break;
-			case "delete computer (" :	
+			case DELETE_COMPUTER :	
 				id=Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				computerService.deleteComp(id);
 				break;
-			case "info computer (" :
+			case INFO_COMPUTER :
 				id=Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				computerService.infoComp(id);
-			case "exit (" :
-				break;
 			default :
 				System.out.println("fonction non reconnue");
 				break;	
