@@ -14,11 +14,15 @@ public class CommandLines {
 	static CompanyService companyService= CompanyService.getInstance();
 	
 	public static void main(String[] args) {
+		LocalDate introduced;
+		LocalDate discontinued;
 		Scanner sc;
 		String entry="";
-		System.out.println("Fonctions disponibles :\n - list computers ()\n - list companies ()\n - computer details (id)\n - create computer (name, introduced, discontinued(null?), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, parameters to change)\n - delete computer (id)\n - exit ()");
+		System.out.println("Fonctions disponibles :\n - list computers ()\n - list companies ()\n - computer details (id)\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company)\n - update computer (id, name, introduced, discontinued)\n - update computer (id, name, introduced, discontinued, id_company)\n - delete computer (id)\n - info computer (id)\n - exit ()");
+		System.out.println("pour set un champ à null en faisant update computer, il faut ecrire null pour les dates et chaines de caractères et 0 pour les entiers");
 		System.out.println("les dates sont au format aaaa-mm-dd");
 		System.out.println("ENTREZ LA COMMANDE");
+		int id=0;
 		while(!(entry.equals("exit"))) {
 			sc= new Scanner(System.in);
 			entry = sc.nextLine();
@@ -46,7 +50,7 @@ public class CommandLines {
 				System.out.println("computer details");
 				System.out.println(entry);
 				System.out.println(entryParsed);
-				int id = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.length()-1));
+				id = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.length()-1));
 				//attention, on ne fait rien du return la
 				computerService.infoComp(id);	
 				break;
@@ -55,8 +59,6 @@ public class CommandLines {
 				
 				String name = "";
 				int company_id=0;
-				LocalDate introduced;
-				LocalDate discontinued;
 				
 				//on compte d'abord combien il y a de virgules pour savoir combien il y a de parametres.
 				// si ca ne mene à rien, on break en disant que cette combinaison de paramettres ne mene à rien
@@ -64,63 +66,102 @@ public class CommandLines {
 				//grace à ces variables, on regarde s'il y a 1, 2 ou 4 parametres avec eventuellement discontinued à null	
 				//pas de virgule donc 1 ou 0 parametre. erreur non encore traitée dans le cas de 0 pour l'instant
 				//test pour 0 arguments :  entre les 2 parentheses il n'y a rien ou que des espaces (grace a substring)
-				if (entry.indexOf(",")==-1) {
-					name=entry.substring(entry.indexOf("(")+1, entry.indexOf(")"));
-					computerService.createComputer(name, null, null, 0);
-				//4, 3 ou 2 args	
-				}else {
-					int indexVirgule1=entry.indexOf(",");
-					int indexVirgule2=indexVirgule1+1+entry.substring(indexVirgule1+1).indexOf(",");
-					int indexVirgule3=indexVirgule2+1+entry.substring(indexVirgule2+1).indexOf(",");
-//					System.out.println("0 à virgule1 "+entry.substring(0, indexVirgule1));
-//					System.out.println(indexVirgule1);
-//					System.out.println("virgule1 à virgule2 "+entry.substring(indexVirgule1+1, indexVirgule2));
-//					System.out.println(indexVirgule2);
-//					System.out.println("virgule2 à virgule3 "+entry.substring(indexVirgule2, indexVirgule3));
-//					System.out.println(indexVirgule3);
-					
-					
-					name="\""+entry.substring(entry.indexOf("(")+1, indexVirgule1)+"\"";
-					//company_id=Integer.parseInt(entry.substring(indexVirgule3, entry.indexOf(")")));
-					//3 ou 2 args
-					if(indexVirgule3==indexVirgule2) {
-						//2 args
-						if(indexVirgule2==indexVirgule1) {
-							computerService.createComputer(name, null, null, company_id);
-						}else {
-							//traitement pour 3 arguments
-							introduced = LocalDate.parse(entry.substring(indexVirgule1+2, indexVirgule2));
-							discontinued=null;
-							
-							System.err.println(name);
-							System.err.println(introduced);
-							System.err.println(discontinued);
-							System.err.println(company_id);
-							computerService.createComputer(name, introduced, discontinued, company_id);
-							
-						}
+				
+				//Xavier a parsé suivant les espaces. Ce serait mieux de copier sur lui je pense
+				if (  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")) != "") ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")) != " ") ) {
+					if (entry.indexOf(",")==-1) {
+						name=entry.substring(entry.indexOf("(")+1, entry.indexOf(")"));
+						computerService.createComputer(name, null, null, 0);
+					//4, 3 ou 2 args	
 					}else {
-						//traitement pour 4 args
-				        introduced = LocalDate.parse(entry.substring(indexVirgule1+1, indexVirgule2));
-						discontinued=LocalDate.parse(entry.substring(indexVirgule2+1, indexVirgule3));
-						computerService.createComputer(name, introduced, discontinued, company_id);
+						int indexVirgule1=entry.indexOf(",");
+						int indexVirgule2=indexVirgule1+1+entry.substring(indexVirgule1+1).indexOf(",");
+						int indexVirgule3=indexVirgule2+1+entry.substring(indexVirgule2+1).indexOf(",");
+						name="\""+entry.substring(entry.indexOf("(")+1, indexVirgule1)+"\"";
+						//company_id=Integer.parseInt(entry.substring(indexVirgule3, entry.indexOf(")")));
+						//3 ou 2 args
+						if(indexVirgule3==indexVirgule2) {
+							//2 args
+							if(indexVirgule2==indexVirgule1) {
+								company_id = Integer.parseInt(entry.substring(indexVirgule1+2, entry.length()-1));
+								computerService.createComputer(name, null, null, company_id);
+							}else {
+								//traitement pour 3 arguments
+								introduced = LocalDate.parse(entry.substring(indexVirgule1+2, indexVirgule2));
+								discontinued=null;
+								company_id = Integer.parseInt(entry.substring(indexVirgule2+2, entry.length()-1));
+								computerService.createComputer(name, introduced, discontinued, company_id);
+								
+							}
+						}else {
+							//traitement pour 4 args
+					        introduced = LocalDate.parse(entry.substring(indexVirgule1+2, indexVirgule2));
+							discontinued = LocalDate.parse(entry.substring(indexVirgule2+2, indexVirgule3));
+							company_id = Integer.parseInt(entry.substring(indexVirgule3+2, entry.length()-1));
+							computerService.createComputer(name, introduced, discontinued, company_id);
+						}	
 					}
-					
-					
-				}
-				
-				
-				
-				
-				//String name = entry.substring(entry.indexOf("(")+1, entry.indexOf(",")-1);
-				//on ne fait rien du retour :/
-				//computerService.createComputer(name, LocalDate.of(2000, 5, 26), LocalDate.of(2000, 5, 28), 3);
+				}	
 				break;
 			case "update computer (" :	
 				//id, parameters to change)
+				int nombreAttributs = (Computer.class.getDeclaredFields()).length;
+				//attention if faut mettre une erreur dans le cas ou le premier argument n'est pas un nombre?
+				ArrayList<Integer> listePositionsVirgules = new ArrayList<Integer>();
+				int lastPos = 0;
+				listePositionsVirgules.add(lastPos);
+				while(entry.substring(lastPos).indexOf(",") != -1) {	
+//					System.out.println();
+//					System.out.println(listePositionsVirgules.get(listePositionsVirgules.size()-1));
+//					System.out.println(entry.substring(listePositionsVirgules.get(listePositionsVirgules.size()-1)));
+					
+					
+					lastPos=listePositionsVirgules.get(listePositionsVirgules.size()-1)+1+entry.substring(listePositionsVirgules.get(listePositionsVirgules.size()-1)).indexOf(",");
+					listePositionsVirgules.add(lastPos);
+//					System.err.println("nb "+listePositionsVirgules.size());
+//					System.err.println("pos "+listePositionsVirgules.get(listePositionsVirgules.size()-1));			
+				}	
+				if(nombreAttributs<listePositionsVirgules.size()-1 || listePositionsVirgules.size()-1<=0) {
+					System.out.println("trop d'arguments ou aucun argument");
+					break;
+				}else {
+					id=Integer.parseInt(entry.substring(entry.indexOf("(")+1, listePositionsVirgules.get(1)-1));
+					Computer computerReferant = computerService.returnComp(id);
+					switch(listePositionsVirgules.size()-1){
+						case 1 : 
+							name=entry.substring(listePositionsVirgules.get(1)+1, entry.length()-1);
+							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), computerReferant.getCompany_id());
+						break;
+						case 2 :
+							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2));
+							company_id=Integer.parseInt(entry.substring(listePositionsVirgules.get(2)+1, entry.length()-1));
+							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), company_id);
+						break;
+						case 3 : 
+							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2));
+							introduced=LocalDate.parse(entry.substring(listePositionsVirgules.get(2)+1, listePositionsVirgules.get(3)));
+							discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, entry.length()-1));
+							computerService.updateComp(id, name, introduced, discontinued, computerReferant.getCompany_id());
+						break;
+						case 4 : 
+							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2));
+							introduced=LocalDate.parse(entry.substring(listePositionsVirgules.get(2)+1, listePositionsVirgules.get(3)-1));
+							discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, listePositionsVirgules.get(4)-1));
+							company_id=Integer.parseInt( entry.substring(listePositionsVirgules.get(4)+1, entry.length()-1) );
+							computerService.updateComp(id, name, introduced, discontinued, company_id);
+						break;
+						default :
+							System.out.println("nous ne verrons jamais ce message");
+					}	
+				}			
 				break;
-			case "delete computer (id)" :	
+			case "delete computer (" :	
+				id=Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
+				computerService.deleteComp(id);
 				break;
+			case "info computer (" :
+				id=Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
+				computerService.infoComp(id);
 			case "exit (" :
 				break;
 			default :

@@ -23,13 +23,13 @@ public class ComputerService {
 	
 	public Computer createComputer(String name, LocalDate introduced, LocalDate discontinued, int company_id) {
 		Computer comp;
+		if(company_id==0 && introduced==null && discontinued == null) {
+			comp = new Computer(name);
+		}
 		if(discontinued!=null) {
 			comp = new Computer(name, introduced, discontinued, company_id); 
-
 		}else {
 			comp = new Computer(name, introduced, company_id); 
-
-
 		}
 		compDAO.createComputer(comp);			
 		return comp;
@@ -41,8 +41,24 @@ public class ComputerService {
 		return toReturn;		
 	}
 	
+	public Computer returnComp(int id) {
+		Computer toReturn = compDAO.infoComp(id).orElse(new Computer());
+		return toReturn;		
+	}
+	
 	public Computer updateComp(int id, String name, LocalDate introduced, LocalDate discontinued, int company_id) {
-		Computer comp = new Computer(id, name, introduced, discontinued, company_id); 
+		Computer comp;
+		if(introduced.toString().equals("null")) {
+			
+		}
+		if(discontinued.toString().equals("null")) {
+			
+		}
+		if(company_id == 0) {
+			
+		}
+		
+		comp = new Computer(id, name, introduced, discontinued, company_id); 
 		compDAO.updateComp(comp);
 		return comp;		
 	}

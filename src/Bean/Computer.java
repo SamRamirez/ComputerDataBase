@@ -16,6 +16,10 @@ public class Computer {
 		super();
 	}
 	
+	public Computer(String name) {
+		this.name=name;
+	}
+	
 	
 	public Computer(String name2, LocalDate introduced2, int company_id2) {
 		super();

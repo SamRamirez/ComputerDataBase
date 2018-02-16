@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -25,8 +27,13 @@ public class ComputerDAO {
 	//à supprimer à terme
 	String query;
 	
+	
+	String queryListComputers = "SELECT id, name, introduced, discontinued, company_id FROM computer";
 	String queryCreateComputer = "INSERT INTO computer (name, introduced, discontinued, company_id)  VALUES (?, ?, ?, ?)";
-   
+	String queryInfoComputer = "SELECT name, introduced, discontinued, company_id from computer where id=?";
+	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
+	String queryDeleteComputer = "DELETE from computer WHERE id = ?";
+
 	
 
 	public String getQuery() {
@@ -45,13 +52,14 @@ public class ComputerDAO {
 		ArrayList<Computer> listComp = new ArrayList<Computer>();
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 
-		query = "select id, name, introduced, discontinued, company_id from computer;";
-
-		Statement stmt;
+//		query = "select id, name, introduced, discontinued, company_id from computer;";
+//
+//		Statement stmt;
 		try {
-			stmt = (Statement) conn.createStatement();
+			//stmt = (Statement) conn.createStatement();
+	        PreparedStatement pstmt = conn.prepareStatement(queryListComputers);
 
-			ResultSet results = stmt.executeQuery(query);
+			ResultSet results = pstmt.executeQuery();
 			while (results.next()) {
 				int id = results.getInt("id");
 				String name = results.getString("name");
@@ -88,7 +96,7 @@ public class ComputerDAO {
 //				+ comp.getIntroduced() + "', '" + comp.getDiscontinued() + "', " + comp.getCompany_id() + ");";
 
 
-		Statement stmt;
+		//Statement stmt;
 		try {
 	        PreparedStatement pstmt = conn.prepareStatement(queryCreateComputer);
 	        
@@ -103,13 +111,14 @@ public class ComputerDAO {
 	        }else {
 	        	pstmt.setDate(3, null);
 	        }
-	        pstmt.setInt(4, comp.getCompany_id());
+	        if(comp.getCompany_id()!=0) {
+	        	pstmt.setInt(4, comp.getCompany_id());
+	        }else {
+	        	pstmt.setNull(4, Types.INTEGER);
+	        }
 	        pstmt.executeUpdate();
 //			stmt = (Statement) conn.createStatement();
 //			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-			
-
-
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -118,16 +127,21 @@ public class ComputerDAO {
 	}
 
 	public Optional<Computer> infoComp(int id) {
-		query = "select name, introduced, discontinued, company_id from computer where id='" + id + "';";
+		//query = "select name, introduced, discontinued, company_id from computer where id='" + id + "';";
 
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 
-		Statement stmt;
+		PreparedStatement pstmt;
 
 		Computer comp = new Computer();
 		try {
-			stmt = (Statement) conn.createStatement();
-			ResultSet results = stmt.executeQuery(query);
+			pstmt =  conn.prepareStatement(queryInfoComputer);
+			if(id!=0) {
+				pstmt.setInt(1, id);
+			}else {
+				System.out.println("que fait-on?");
+			}
+			ResultSet results = pstmt.executeQuery();
 			
 
 			if (results.next()) {
@@ -168,32 +182,37 @@ public class ComputerDAO {
 	public Computer updateComp(Computer comp) {
 		Computer toReturn=comp;
 		
-		query = "UPDATE computer SET name = '"+comp.getName()+"' ";
+		//query = "UPDATE computer SET name = '"+comp.getName()+"' ";
 		
-		LocalDate introduced;
-		if (comp.getIntroduced() != null) {
-			introduced = comp.getIntroduced();
-			query=query+", introduced = '"+introduced+"' "; 
-		} else {
-			introduced = null;
-		}
-		LocalDate discontinued;
-		if (comp.getDiscontinued() != null) {
-			discontinued = comp.getDiscontinued();
-			query=query+", discontinued = '"+discontinued+"' "; 
-		} else {
-			discontinued = null;
-		}
+		
 		
 		query=query+"WHERE id = '"+comp.getId()+"' ;";
 		
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 		
-		Statement stmt;
+		PreparedStatement pstmt;
 		try {
-			stmt = (Statement) conn.createStatement();
-			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+			pstmt = (PreparedStatement) conn.prepareStatement(queryUpdateComputer);
+			pstmt.executeUpdate();
+			LocalDate introduced;
+			if (comp.getIntroduced() != null) {
+				introduced = comp.getIntroduced();
+				//query=query+", introduced = '"+introduced+"' "; 
+	        	pstmt.setDate(2, Date.valueOf(comp.getIntroduced()));
+//	        	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 
+
+			} else {
+				introduced = null;
+			}
+			LocalDate discontinued;
+			if (comp.getDiscontinued() != null) {
+				discontinued = comp.getDiscontinued();
+				query=query+", discontinued = '"+discontinued+"' "; 
+			} else {
+				discontinued = null;
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -207,14 +226,14 @@ public class ComputerDAO {
 	//ca serait pas mal de dire à l'utilisateur si rien n'a ete effacé
 	public void deleteComp(int id) {
 		
-		query = "DELETE from computer WHERE id = '"+id+"' ;";
+		//query = "DELETE from computer WHERE id = '"+id+"' ;";
 		
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 		
-		Statement stmt;
+		PreparedStatement stmt;
 		try {
-			stmt = (Statement) conn.createStatement();
-			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+			stmt = conn.prepareStatement(queryDeleteComputer);
+			stmt.executeUpdate();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
