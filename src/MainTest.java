@@ -14,7 +14,7 @@ public class MainTest {
 		ComputerService compService= ComputerService.getInstance();
 	
 		
-		ArrayList<Computer> listComp = compService.listComputer();
+		ArrayList<Computer> listComp = compService.listComputer(1);
 		for(int i =0; i<listComp.size(); i++) {
 			System.out.print(listComp.get(i).getId());
 			System.out.print(" "+listComp.get(i).getName());

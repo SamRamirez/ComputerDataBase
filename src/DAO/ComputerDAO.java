@@ -23,7 +23,7 @@ public class ComputerDAO {
 	}
 	
 	
-	String queryListComputers = "SELECT id, name, introduced, discontinued, company_id FROM computer";
+	String queryListComputers = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ?, 10";
 	String queryCreateComputer = "INSERT INTO computer (name, introduced, discontinued, company_id)  VALUES (?, ?, ?, ?)";
 	String queryInfoComputer = "SELECT name, introduced, discontinued, company_id from computer where id=?";
 	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
@@ -33,12 +33,13 @@ public class ComputerDAO {
 	private ComputerDAO() {
 	}
 
-	public ArrayList<Computer> listComputer() {
+	public ArrayList<Computer> listComputer(int page) {
 		ArrayList<Computer> listComp = new ArrayList<Computer>();
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 
 		try {
 	        PreparedStatement pstmt = conn.prepareStatement(queryListComputers);
+	        pstmt.setInt(1, 10*(page-1));
 
 			ResultSet results = pstmt.executeQuery();
 			while (results.next()) {

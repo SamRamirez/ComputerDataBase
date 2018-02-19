@@ -18,16 +18,17 @@ public class CompanyDAO {
 		return instance;
 	}
 	
-	String queryListCompany = "select id, name from company";
+	String queryListCompany = "select id, name from company LIMIT ?, 10";
 
 
-	public ArrayList<Company> listCompany() {
+	public ArrayList<Company> listCompany(int page) {
 		ArrayList<Company> listComp = new ArrayList<Company>();
 		Connection conn = (Connection) Connect.getInstance().getConnection();
 
 		PreparedStatement pstmt;
 		try {
 			pstmt = (PreparedStatement) conn.prepareStatement(queryListCompany);
+			pstmt.setInt(1, 10*(page-1));
 
 			ResultSet results = pstmt.executeQuery();
 			while (results.next()) {

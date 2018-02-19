@@ -22,7 +22,7 @@ public class CommandLines {
 		LocalDate discontinued;
 		Scanner sc;
 		String entry="";
-		System.out.println("Fonctions disponibles :\n - list computers ()\n - list companies ()\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company(/0))\n - update computer (id, name, introduced(/null), discontinued(/null))\n - update computer (id, name, introduced(/null), discontinued(/null), id_company(/0))\n - delete computer (id)\n - info computer (id)\n - exit ()");
+		System.out.println("Fonctions disponibles :\n - list computers ()\n - list computers (page)\n - list companies ()\n - list companies (page)\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company(/0))\n - update computer (id, name, introduced(/null), discontinued(/null))\n - update computer (id, name, introduced(/null), discontinued(/null), id_company(/0))\n - delete computer (id)\n - info computer (id)\n - exit ()");
 		System.out.println("les dates sont au format aaaa-mm-dd");
 		System.out.println("ENTREZ LA COMMANDE");
 		int id=0;
@@ -34,7 +34,12 @@ public class CommandLines {
 			String entryParsed = entry.substring(0, entry.indexOf("(")+1);
 			switch(Command.fromNameToEnum(entryParsed)) {
 			case LIST_COMPUTERS : 
-				ArrayList<Computer> listComp = computerService.listComputer();
+				ArrayList<Computer> listComp; 
+				int pageComputer = 1;
+				if ( ! (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals("")) ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals(" ")) ) {	
+					pageComputer = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
+				}
+				listComp = computerService.listComputer(pageComputer);
 				for(int i =0; i<listComp.size(); i++) {
 					System.out.print(listComp.get(i).getId());
 					System.out.print(" "+listComp.get(i).getName());
@@ -42,8 +47,15 @@ public class CommandLines {
 					System.out.println();
 				}
 				break;
+				
+				
 			case LIST_COMPANIES	:
-				ArrayList<Company> listCompany = companyService.listCompany();
+				ArrayList<Company> listCompany; 
+				int pageCompany = 1;
+				if ( !( (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals("")) ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals(" ")) ) ) {				
+					pageCompany = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
+				}
+				listCompany = companyService.listCompany(pageCompany);
 				for(int i =0; i<listCompany.size(); i++) {
 					System.out.print(listCompany.get(i).getId());
 					System.out.print(" "+listCompany.get(i).getName());					
