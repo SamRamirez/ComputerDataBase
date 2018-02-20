@@ -34,45 +34,31 @@ public class CommandLines {
 			
 			String entryParsed = entry.substring(0, entry.indexOf("(")+1);
 			switch(Command.fromNameToEnum(entryParsed)) {
+			
 			case LIST_COMPUTERS : 
-				ArrayList<Computer> listComp; 
-				int pageComputer = 1;
+				int pageComputerNumber = 1;
+				int numberOfComputers = 10;
 				if ( ! (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals("")) ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals(" ")) ) {	
-					pageComputer = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
+					pageComputerNumber = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				}
-				listComp = computerService.listComputer(pageComputer, 10);
-				for(int i =0; i<listComp.size(); i++) {
-					System.out.print(listComp.get(i).getId());
-					System.out.print(" "+listComp.get(i).getName());
-					System.out.print(" "+listComp.get(i).getIntroduced());				
+				Page pageComputer = new Page(numberOfComputers, pageComputerNumber);
+				pageComputer.setListElements( computerService.listComputer(pageComputerNumber, numberOfComputers) );
+				for(int i =0; i<pageComputer.getNumberOfElements(); i++) {
+					System.out.print(((Computer) pageComputer.getListElements().get(i)).getId());
+					System.out.print(((Computer) pageComputer.getListElements().get(i)).getName());
+					System.out.print(" "+((Computer) pageComputer.getListElements().get(i)).getIntroduced());				
 					System.out.println();
 				}
 				break;
 				
-				
-//			case LIST_COMPANIES	:
-//				ArrayList<Company> listCompany; 
-//				int pageCompany = 1;
-//				if ( !( (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals("")) ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals(" ")) ) ) {				
-//					pageCompany = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
-//				}
-//				listCompany = companyService.listCompany(pageCompany, 10);
-//				for(int i =0; i<listCompany.size(); i++) {
-//					System.out.print(listCompany.get(i).getId());
-//					System.out.print(" "+listCompany.get(i).getName());					
-//					System.out.println();
-//				}
-//				break;
-				
-				
 			case LIST_COMPANIES	: 
 				int pageCompanyNumber = 1;
-				int numberOfElements = 10;
+				int numberOfCompanies = 10;
 				if ( !( (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals("")) ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals(" ")) ) ) {				
 					pageCompanyNumber = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				}
-				Page pageCompany = new Page(numberOfElements, pageCompanyNumber);
-				pageCompany.setListElements(companyService.listCompany(pageCompanyNumber, numberOfElements));
+				Page pageCompany = new Page(numberOfCompanies, pageCompanyNumber);
+				pageCompany.setListElements(companyService.listCompany(pageCompanyNumber, numberOfCompanies));
 				for(int i =0; i<pageCompany.getNumberOfElements(); i++) {
 					System.out.print(((Company) pageCompany.getListElements().get(i)).getId());
 					System.out.print(" "+((Company) pageCompany.getListElements().get(i)).getName());					
