@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import com.mysql.jdbc.PreparedStatement;
 
-import Bean.Company;
+import bean.Company;
 import connection.Connect;
 
 public class CompanyDAO {
@@ -21,6 +21,9 @@ public class CompanyDAO {
 
 	public static CompanyDAO getInstance() {
 		return instance;
+	}
+	
+	private CompanyDAO() {
 	}
 	
 	String queryListCompany = "select id, name from company LIMIT ?, ?";

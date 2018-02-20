@@ -1,3 +1,9 @@
+#Environnement
+.project
+.classpath
+.settings/
+target/
+
 # Compiled class file
 *.class
 

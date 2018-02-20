@@ -2,10 +2,10 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import Bean.Company;
-import Bean.Computer;
-import Service.CompanyService;
-import Service.ComputerService;
+import bean.Company;
+import bean.Computer;
+import service.CompanyService;
+import service.ComputerService;
 
 public class MainTest {
 	

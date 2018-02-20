@@ -1,10 +1,10 @@
-package Service;
+package service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import Bean.Computer;
 import DAO.ComputerDAO;
+import bean.Computer;
 
 public class ComputerService {
 	
@@ -15,6 +15,9 @@ public class ComputerService {
 	}
 	
 	
+	private ComputerService() {
+	}
+
 	ComputerDAO compDAO= ComputerDAO.getInstance();
 	
 	public ArrayList<Computer> listComputer(int page, int numberOfElements) {
@@ -37,7 +40,7 @@ public class ComputerService {
 	
 	public Computer infoComp(int id) {
 		Computer toReturn = compDAO.infoComp(id).orElse(new Computer());
-		System.out.println("infos du computer d'id "+id+" : "+toReturn.getName()+" "+toReturn.getIntroduced()+" "+toReturn.getDiscontinued()+" "+toReturn.getCompany_id());
+		System.out.println(toReturn.toString());
 		return toReturn;		
 	}
 	

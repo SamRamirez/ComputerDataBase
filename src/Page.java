@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-import Bean.Element;
+import bean.Element;
 
 public class Page {
 	

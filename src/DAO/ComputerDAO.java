@@ -12,35 +12,31 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
-import Bean.Computer;
+import bean.Computer;
 import connection.Connect;
 
 public class ComputerDAO {
 	
 	private static final Logger logger = Logger.getLogger(ComputerDAO.class);
 
+	private ComputerDAO() {
+	}
 
 	private final static ComputerDAO instance = new ComputerDAO();
 
 	public static ComputerDAO getInstance() {
 		return instance;
 	}
-	
-	
+		
 	String queryListComputers = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ?, ?";
 	String queryCreateComputer = "INSERT INTO computer (name, introduced, discontinued, company_id)  VALUES (?, ?, ?, ?)";
 	String queryInfoComputer = "SELECT name, introduced, discontinued, company_id from computer where id=?";
 	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	String queryDeleteComputer = "DELETE from computer WHERE id = ?";
 
-
-	private ComputerDAO() {
-	}
-
 	public ArrayList<Computer> listComputer(int page, int numberOfElements) {
 		ArrayList<Computer> listComp = new ArrayList<Computer>();
 		
-
 		try (Connection conn = Connect.getInstance().getConnection();) {
 	        PreparedStatement pstmt = conn.prepareStatement(queryListComputers);
 	        pstmt.setInt(1, 10*(page-1));
@@ -88,8 +84,8 @@ public class ComputerDAO {
 	        }else {
 	        	pstmt.setDate(3, null);
 	        }
-	        if(comp.getCompany_id()!=0) {
-	        	pstmt.setInt(4, comp.getCompany_id());
+	        if(comp.getCompanyId()!=0) {
+	        	pstmt.setInt(4, comp.getCompanyId());
 	        }else {
 	        	pstmt.setNull(4, Types.INTEGER);
 	        }
@@ -162,8 +158,8 @@ public class ComputerDAO {
 			} else {
 	        	pstmt.setDate(3, null);
 			}
-			if (comp.getCompany_id()!=0) {
-				pstmt.setInt(4, comp.getCompany_id());
+			if (comp.getCompanyId()!=0) {
+				pstmt.setInt(4, comp.getCompanyId());
 			}else {
 				pstmt.setNull(4, Types.INTEGER);
 			}

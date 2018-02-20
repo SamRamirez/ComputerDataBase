@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 import com.mysql.jdbc.Statement;
 
-import Bean.Computer;
 import DAO.ComputerDAO;
+import bean.Computer;
 
 public class Connect {
 	

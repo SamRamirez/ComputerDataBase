@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
-import Bean.Company;
-import Bean.Computer;
-import Bean.Element;
-import Service.CompanyService;
-import Service.ComputerService;
+import bean.Company;
+import bean.Computer;
+import bean.Element;
+import service.CompanyService;
+import service.ComputerService;
 
 public class CommandLines {
 	
@@ -28,7 +28,8 @@ public class CommandLines {
 		System.out.println("les dates sont au format aaaa-mm-dd");
 		System.out.println("ENTREZ LA COMMANDE");
 		int id=0;
-		while( !(Command.fromNameToEnum(entry)!=null)  || !(Command.fromNameToEnum(entry).equals(Command.EXIT))) {	
+		//la premiere condition n'est pas inutile en fait
+		while(!(Command.fromNameToEnum(entry)!=null) || !(Command.fromNameToEnum(entry).equals(Command.EXIT))) {	
 			sc= new Scanner(System.in);
 			entry = sc.nextLine();
 			
@@ -50,7 +51,7 @@ public class CommandLines {
 					System.out.println();
 				}
 				break;
-				
+
 			case LIST_COMPANIES	: 
 				int pageCompanyNumber = 1;
 				int numberOfCompanies = 10;
@@ -139,7 +140,7 @@ public class CommandLines {
 					switch(listePositionsVirgules.size()-1){
 						case 1 : 
 							name=entry.substring(listePositionsVirgules.get(1)+1, entry.length()-1);
-							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), computerReferant.getCompany_id());
+							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), computerReferant.getCompanyId());
 						break;
 						case 2 :
 							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
@@ -158,7 +159,7 @@ public class CommandLines {
 							}else {
 								discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, entry.length()-1));
 							}	
-							computerService.updateComp(id, name, introduced, discontinued, computerReferant.getCompany_id());
+							computerService.updateComp(id, name, introduced, discontinued, computerReferant.getCompanyId());
 						break;
 						case 4 : 
 							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
@@ -187,6 +188,7 @@ public class CommandLines {
 			case INFO_COMPUTER :
 				id=Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				computerService.infoComp(id);
+				break;
 			default :
 				System.out.println("fonction non reconnue");
 				break;	

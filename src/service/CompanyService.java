@@ -1,11 +1,9 @@
-package Service;
+package service;
 
 import java.util.ArrayList;
 
-import Bean.Company;
-import Bean.Computer;
 import DAO.CompanyDAO;
-import DAO.ComputerDAO;
+import bean.Company;
 
 public class CompanyService {
 	
@@ -14,7 +12,12 @@ private final static CompanyService instance = new CompanyService();
 	public static CompanyService getInstance() {
 		return instance;
 	}
-	
+		
+	private CompanyService() {
+	}
+
+
+
 	CompanyDAO companyDAO= CompanyDAO.getInstance();
 	
 	public ArrayList<Company> listCompany(int page, int numberOfElements) {
