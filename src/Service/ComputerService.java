@@ -17,8 +17,8 @@ public class ComputerService {
 	
 	ComputerDAO compDAO= ComputerDAO.getInstance();
 	
-	public ArrayList<Computer> listComputer(int page) {
-		return compDAO.listComputer(page);
+	public ArrayList<Computer> listComputer(int page, int numberOfElements) {
+		return compDAO.listComputer(page, numberOfElements);
 	}
 	
 	public Computer createComputer(String name, LocalDate introduced, LocalDate discontinued, int company_id) {

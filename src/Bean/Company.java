@@ -1,6 +1,6 @@
 package Bean;
 
-public class Company {
+public class Company extends Element{
 	
 	public int id;
 	public String name;

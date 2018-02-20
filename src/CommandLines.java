@@ -2,20 +2,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.apache.log4j.Logger;
+
 import Bean.Company;
 import Bean.Computer;
+import Bean.Element;
 import Service.CompanyService;
 import Service.ComputerService;
 
 public class CommandLines {
 	
+	private static final Logger logger = Logger.getLogger(CommandLines.class);
+	
 	//pourquoi il faut le mettre en static?!
 	static ComputerService computerService= ComputerService.getInstance();
 	static CompanyService companyService= CompanyService.getInstance();
 	
-	private void listComputers() {
-		
-	}
 	
 	public static void main(String[] args) {
 		LocalDate introduced;
@@ -26,7 +28,6 @@ public class CommandLines {
 		System.out.println("les dates sont au format aaaa-mm-dd");
 		System.out.println("ENTREZ LA COMMANDE");
 		int id=0;
-		//while(!(entry.equals("exit"))) {
 		while( !(Command.fromNameToEnum(entry)!=null)  || !(Command.fromNameToEnum(entry).equals(Command.EXIT))) {	
 			sc= new Scanner(System.in);
 			entry = sc.nextLine();
@@ -39,7 +40,7 @@ public class CommandLines {
 				if ( ! (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals("")) ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals(" ")) ) {	
 					pageComputer = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				}
-				listComp = computerService.listComputer(pageComputer);
+				listComp = computerService.listComputer(pageComputer, 10);
 				for(int i =0; i<listComp.size(); i++) {
 					System.out.print(listComp.get(i).getId());
 					System.out.print(" "+listComp.get(i).getName());
@@ -49,19 +50,36 @@ public class CommandLines {
 				break;
 				
 				
-			case LIST_COMPANIES	:
-				ArrayList<Company> listCompany; 
-				int pageCompany = 1;
+//			case LIST_COMPANIES	:
+//				ArrayList<Company> listCompany; 
+//				int pageCompany = 1;
+//				if ( !( (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals("")) ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals(" ")) ) ) {				
+//					pageCompany = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
+//				}
+//				listCompany = companyService.listCompany(pageCompany, 10);
+//				for(int i =0; i<listCompany.size(); i++) {
+//					System.out.print(listCompany.get(i).getId());
+//					System.out.print(" "+listCompany.get(i).getName());					
+//					System.out.println();
+//				}
+//				break;
+				
+				
+			case LIST_COMPANIES	: 
+				int pageCompanyNumber = 1;
+				int numberOfElements = 10;
 				if ( !( (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals("")) ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals(" ")) ) ) {				
-					pageCompany = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
+					pageCompanyNumber = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				}
-				listCompany = companyService.listCompany(pageCompany);
-				for(int i =0; i<listCompany.size(); i++) {
-					System.out.print(listCompany.get(i).getId());
-					System.out.print(" "+listCompany.get(i).getName());					
+				Page pageCompany = new Page(numberOfElements, pageCompanyNumber);
+				pageCompany.setListElements(companyService.listCompany(pageCompanyNumber, numberOfElements));
+				for(int i =0; i<pageCompany.getNumberOfElements(); i++) {
+					System.out.print(((Company) pageCompany.getListElements().get(i)).getId());
+					System.out.print(" "+((Company) pageCompany.getListElements().get(i)).getName());					
 					System.out.println();
 				}
 				break;
+								
 			case CREATE_COMPUTER :				
 				String name = "";
 				int company_id=0;

@@ -1,5 +1,6 @@
 package DAO;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,12 +10,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import com.mysql.jdbc.Connection;
+import org.apache.log4j.Logger;
 
 import Bean.Computer;
 import connection.Connect;
 
 public class ComputerDAO {
+	
+	private static final Logger logger = Logger.getLogger(ComputerDAO.class);
+
 
 	private final static ComputerDAO instance = new ComputerDAO();
 
@@ -23,7 +27,7 @@ public class ComputerDAO {
 	}
 	
 	
-	String queryListComputers = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ?, 10";
+	String queryListComputers = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ?, ?";
 	String queryCreateComputer = "INSERT INTO computer (name, introduced, discontinued, company_id)  VALUES (?, ?, ?, ?)";
 	String queryInfoComputer = "SELECT name, introduced, discontinued, company_id from computer where id=?";
 	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
@@ -33,14 +37,14 @@ public class ComputerDAO {
 	private ComputerDAO() {
 	}
 
-	public ArrayList<Computer> listComputer(int page) {
+	public ArrayList<Computer> listComputer(int page, int numberOfElements) {
 		ArrayList<Computer> listComp = new ArrayList<Computer>();
-		Connection conn = (Connection) Connect.getInstance().getConnection();
+		
 
-		try {
+		try (Connection conn = Connect.getInstance().getConnection();) {
 	        PreparedStatement pstmt = conn.prepareStatement(queryListComputers);
 	        pstmt.setInt(1, 10*(page-1));
-
+	        pstmt.setInt(2, numberOfElements);
 			ResultSet results = pstmt.executeQuery();
 			while (results.next()) {
 				int id = results.getInt("id");
@@ -63,18 +67,14 @@ public class ComputerDAO {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-		Connect.close();
 		return listComp;
 	}
 
 	public void createComputer(Computer comp) {
 
-		Connection conn = (Connection) Connect.getInstance().getConnection();
-
-		try {
+		try (Connection conn = Connect.getInstance().getConnection();){
 	        PreparedStatement pstmt = conn.prepareStatement(queryCreateComputer);
 	        
 	        pstmt.setString(1, comp.getName());
@@ -95,20 +95,18 @@ public class ComputerDAO {
 	        }
 	        pstmt.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-		Connect.close();
 	}
 
+	
 	public Optional<Computer> infoComp(int id) {
-
-		Connection conn = (Connection) Connect.getInstance().getConnection();
-
-		PreparedStatement pstmt;
-
+		
 		Computer comp = new Computer();
-		try {
+
+		try (Connection conn = Connect.getInstance().getConnection();){
+			PreparedStatement pstmt;
+
 			pstmt =  conn.prepareStatement(queryInfoComputer);
 			if(id!=0) {
 				pstmt.setInt(1, id);
@@ -116,8 +114,6 @@ public class ComputerDAO {
 				System.out.println("que fait-on?");
 			}
 			ResultSet results = pstmt.executeQuery();
-			
-
 			if (results.next()) {
 
 				String name = results.getString("name");
@@ -141,11 +137,8 @@ public class ComputerDAO {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-		Connect.close();
-
 		return Optional.ofNullable(comp);
 	}
 
@@ -154,10 +147,8 @@ public class ComputerDAO {
 	//Ne serais-ce pas bien de signaler à l'utilisateur que l'ordi à modifier n'existe pas dans le cas ou l'id ne correspond à aucun computer?
 	public Computer updateComp(Computer comp) {
 		
-		Connection conn = (Connection) Connect.getInstance().getConnection();
-		
-		PreparedStatement pstmt;
-		try {
+		try(Connection conn = Connect.getInstance().getConnection();) {
+			PreparedStatement pstmt;
 			pstmt = (PreparedStatement) conn.prepareStatement(queryUpdateComputer);
 			pstmt.setInt(5, comp.getId());
 			pstmt.setString(1, comp.getName());
@@ -178,10 +169,8 @@ public class ComputerDAO {
 			}
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-		Connect.close();
 		return comp;
 	}
 	
@@ -190,19 +179,15 @@ public class ComputerDAO {
 	//ca serait pas mal de dire à l'utilisateur si rien n'a ete effacé
 	public void deleteComp(int id) {
 		
-		Connection conn = (Connection) Connect.getInstance().getConnection();
-		
-		PreparedStatement pstmt;
-		try {
+		try (Connection conn = Connect.getInstance().getConnection();){
+			PreparedStatement pstmt;
 			pstmt = conn.prepareStatement(queryDeleteComputer);
 			pstmt.setInt(1, id);
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-		Connect.close();
 	}
 	
 

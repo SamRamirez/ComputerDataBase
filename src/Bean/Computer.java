@@ -1,7 +1,7 @@
 package Bean;
 import java.time.LocalDate;
 
-public class Computer {
+public class Computer extends Element{
 	
 	public int id;
 	public String name;

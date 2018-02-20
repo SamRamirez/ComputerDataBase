@@ -17,8 +17,8 @@ private final static CompanyService instance = new CompanyService();
 	
 	CompanyDAO companyDAO= CompanyDAO.getInstance();
 	
-	public ArrayList<Company> listCompany(int page) {
-		return companyDAO.listCompany(page);
+	public ArrayList<Company> listCompany(int page, int numberOfElements) {
+		return companyDAO.listCompany(page, numberOfElements);
 	}
 
 }

@@ -1,10 +1,12 @@
 package DAO;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.mysql.jdbc.Connection;
+import org.apache.log4j.Logger;
+
 import com.mysql.jdbc.PreparedStatement;
 
 import Bean.Company;
@@ -12,23 +14,25 @@ import connection.Connect;
 
 public class CompanyDAO {
 	
+	private static final Logger logger = Logger.getLogger(CompanyDAO.class);
+
+	
 	private final static CompanyDAO instance = new CompanyDAO();
 
 	public static CompanyDAO getInstance() {
 		return instance;
 	}
 	
-	String queryListCompany = "select id, name from company LIMIT ?, 10";
+	String queryListCompany = "select id, name from company LIMIT ?, ?";
 
 
-	public ArrayList<Company> listCompany(int page) {
-		ArrayList<Company> listComp = new ArrayList<Company>();
-		Connection conn = (Connection) Connect.getInstance().getConnection();
-
-		PreparedStatement pstmt;
-		try {
+	public ArrayList<Company> listCompany(int page, int numberOfElements) {
+		ArrayList<Company> listComp = new ArrayList<Company>();		
+		try (Connection conn =  Connect.getInstance().getConnection();) {
+			PreparedStatement pstmt;
 			pstmt = (PreparedStatement) conn.prepareStatement(queryListCompany);
 			pstmt.setInt(1, 10*(page-1));
+			pstmt.setInt(2, numberOfElements);
 
 			ResultSet results = pstmt.executeQuery();
 			while (results.next()) {
@@ -40,10 +44,10 @@ public class CompanyDAO {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-		Connect.close();
+		//Connect.close();
+		
 		return listComp;
 	}
 
