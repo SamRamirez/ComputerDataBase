@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 
 import bean.Company;
 import bean.Computer;
-import bean.Element;
 import service.CompanyService;
 import service.ComputerService;
 
@@ -23,7 +22,7 @@ public class CommandLines {
 		LocalDate introduced;
 		LocalDate discontinued;
 		Scanner sc;
-		String entry="";
+		String entry = "";
 		System.out.println("Fonctions disponibles :\n - list computers ()\n - list computers (page)\n - list companies ()\n - list companies (page)\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company(/0))\n - update computer (id, name, introduced(/null), discontinued(/null))\n - update computer (id, name, introduced(/null), discontinued(/null), id_company(/0))\n - delete computer (id)\n - info computer (id)\n - exit ()");
 		System.out.println("les dates sont au format aaaa-mm-dd");
 		System.out.println("ENTREZ LA COMMANDE");
@@ -96,7 +95,7 @@ public class CommandLines {
 							if(indexVirgule2==indexVirgule1) {
 								company_id = Integer.parseInt(entry.substring(indexVirgule1+2, entry.length()-1));
 								computerService.createComputer(name, null, null, company_id);
-							}else {
+							} else {
 								//traitement pour 3 arguments
 								try {
 									introduced = LocalDate.parse(entry.substring(indexVirgule1+2, indexVirgule2));
