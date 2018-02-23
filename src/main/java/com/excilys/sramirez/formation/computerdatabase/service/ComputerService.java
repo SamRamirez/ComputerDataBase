@@ -1,10 +1,10 @@
-package service;
+package main.java.com.excilys.sramirez.formation.computerdatabase.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import DAO.ComputerDAO;
-import bean.Computer;
+import main.java.com.excilys.sramirez.formation.computerdatabase.DAO.ComputerDAO;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
 
 public class ComputerService {
 	

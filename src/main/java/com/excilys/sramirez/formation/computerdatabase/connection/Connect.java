@@ -1,47 +1,49 @@
-package connection;
+package main.java.com.excilys.sramirez.formation.computerdatabase.connection;
 
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
-import com.mysql.jdbc.Statement;
-
-import DAO.ComputerDAO;
-import bean.Computer;
+import java.util.ResourceBundle;
 
 public class Connect {
-	
-	
+
+
 	static Connection conn;
-	static String url;
-	
+	private String url;
+	private String login;
+	private String password;
+
+
 
 	public static void setConn(Connection conn) {
 		Connect.conn = conn;
 	}
 
 	private final static Connect instance = new Connect();
-	
+
 	private Connect() {
+		ResourceBundle bundle = ResourceBundle.getBundle("main.resources.connect");
+        login = bundle.getString("login");
+        password = bundle.getString("password");
+        url = bundle.getString("url");
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			url = "jdbc:mysql://127.0.0.1:3306/computer-database-db?useSSL=false";
+
+			//url = "jdbc:mysql://127.0.0.1:3306/computer-database-db?useSSL=false";
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
-	
+
 	public static Connect getInstance() {
 		return instance;
 	}
-	
+
 	public Connection getConnection() {
 		try {
-			conn = DriverManager.getConnection(url,"admincdb","qwerty1234");
+			conn = DriverManager.getConnection(url,login,password);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,7 +51,7 @@ public class Connect {
 		return conn;
 
 	}
-	
+
 	public static void close() {
 		try {
 			conn.close();

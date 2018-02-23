@@ -1,4 +1,4 @@
-package bean;
+package main.java.com.excilys.sramirez.formation.computerdatabase.bean;
 import java.time.LocalDate;
 
 public class Computer extends Element{

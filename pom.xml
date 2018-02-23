@@ -25,6 +25,12 @@
     </plugins>
   </build>
   
+   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <mainClass>com.excilys.formation.cdb.IHM</mainClass>
+    <powermock.version>1.7.1</powermock.version>
+  </properties>
+  
   <dependencies>
   
     <dependency>
@@ -33,7 +39,35 @@
     <version>8.0.9-rc</version>
 	</dependency>
 	
-	
+<!-- https://mvnrepository.com/artifact/junit/junit -->
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.12</version>
+    <scope>test</scope>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.hsqldb/hsqldb -->
+<dependency>
+    <groupId>org.hsqldb</groupId>
+    <artifactId>hsqldb</artifactId>
+    <version>2.4.0</version>
+    <scope>test</scope>
+</dependency>
+
+<dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+   </dependency>
+   
+   <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+   </dependency>
 	
   </dependencies>
 

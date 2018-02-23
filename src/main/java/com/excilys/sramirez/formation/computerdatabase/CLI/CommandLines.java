@@ -1,23 +1,25 @@
+package main.java.com.excilys.sramirez.formation.computerdatabase.CLI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
-import bean.Company;
-import bean.Computer;
-import service.CompanyService;
-import service.ComputerService;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
+import main.java.com.excilys.sramirez.formation.computerdatabase.service.CompanyService;
+import main.java.com.excilys.sramirez.formation.computerdatabase.service.ComputerService;
+import main.java.com.excilys.sramirez.formation.computerdatabase.service.Page;
 
 public class CommandLines {
-	
-	private static final Logger logger = Logger.getLogger(CommandLines.class);
-	
+
+	private static final Logger logger = Logger.getLogger( CommandLines.class ) ;
+
 	//pourquoi il faut le mettre en static?!
-	static ComputerService computerService= ComputerService.getInstance();
-	static CompanyService companyService= CompanyService.getInstance();
-	
-	
+	static ComputerService computerService = ComputerService.getInstance();
+	static CompanyService companyService = CompanyService.getInstance();
+
+
 	public static void main(String[] args) {
 		LocalDate introduced;
 		LocalDate discontinued;
@@ -26,15 +28,15 @@ public class CommandLines {
 		System.out.println("Fonctions disponibles :\n - list computers ()\n - list computers (page)\n - list companies ()\n - list companies (page)\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company(/0))\n - update computer (id, name, introduced(/null), discontinued(/null))\n - update computer (id, name, introduced(/null), discontinued(/null), id_company(/0))\n - delete computer (id)\n - info computer (id)\n - exit ()");
 		System.out.println("les dates sont au format aaaa-mm-dd");
 		System.out.println("ENTREZ LA COMMANDE");
-		int id=0;
+		int id = 0;
 		//la premiere condition n'est pas inutile en fait
-		while(!(Command.fromNameToEnum(entry)!=null) || !(Command.fromNameToEnum(entry).equals(Command.EXIT))) {	
-			sc= new Scanner(System.in);
+		while (!(Command.fromNameToEnum(entry) != null) || !(Command.fromNameToEnum(entry).equals(Command.EXIT))) {	
+			sc = new Scanner(System.in);
 			entry = sc.nextLine();
-			
-			String entryParsed = entry.substring(0, entry.indexOf("(")+1);
-			switch(Command.fromNameToEnum(entryParsed)) {
-			
+
+			String entryParsed = entry.substring(0, entry.indexOf("(") + 1);
+			switch (Command.fromNameToEnum(entryParsed)) {
+
 			case LIST_COMPUTERS : 
 				int pageComputerNumber = 1;
 				int numberOfComputers = 10;
@@ -181,16 +183,16 @@ public class CommandLines {
 				}			
 				break;
 			case DELETE_COMPUTER :	
-				id=Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
+				id = Integer.parseInt(entry.substring(entry.indexOf("(") + 1, entry.indexOf(")")));
 				computerService.deleteComp(id);
 				break;
 			case INFO_COMPUTER :
-				id=Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
+				id = Integer.parseInt(entry.substring(entry.indexOf("(") + 1, entry.indexOf(")")));
 				computerService.infoComp(id);
 				break;
 			default :
 				System.out.println("fonction non reconnue");
-				break;	
+                break;
 			}
 			System.out.println();
 			System.out.println("Nouvelle commande?");

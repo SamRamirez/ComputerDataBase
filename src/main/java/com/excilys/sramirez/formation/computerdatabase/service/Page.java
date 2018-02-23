@@ -1,6 +1,7 @@
+package main.java.com.excilys.sramirez.formation.computerdatabase.service;
 import java.util.ArrayList;
 
-import bean.Element;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Element;
 
 public class Page {
 	

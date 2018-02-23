@@ -1,4 +1,4 @@
-package bean;
+package main.java.com.excilys.sramirez.formation.computerdatabase.bean;
 
 public class Company extends Element{
 	

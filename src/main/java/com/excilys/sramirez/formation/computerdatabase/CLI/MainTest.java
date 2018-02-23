@@ -1,11 +1,12 @@
+package main.java.com.excilys.sramirez.formation.computerdatabase.CLI;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import bean.Company;
-import bean.Computer;
-import service.CompanyService;
-import service.ComputerService;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
+import main.java.com.excilys.sramirez.formation.computerdatabase.service.CompanyService;
+import main.java.com.excilys.sramirez.formation.computerdatabase.service.ComputerService;
 
 public class MainTest {
 	

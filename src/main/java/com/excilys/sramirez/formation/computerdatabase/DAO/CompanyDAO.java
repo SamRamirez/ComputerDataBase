@@ -1,4 +1,4 @@
-package DAO;
+package main.java.com.excilys.sramirez.formation.computerdatabase.DAO;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -9,8 +9,8 @@ import org.apache.log4j.Logger;
 
 import com.mysql.jdbc.PreparedStatement;
 
-import bean.Company;
-import connection.Connect;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
+import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
 
 public class CompanyDAO {
 	

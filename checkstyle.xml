@@ -57,19 +57,15 @@
     <module name="SimplifyBooleanReturn"/>
     <module name="ArrayTypeStyle"/>
     <module name="UpperEll"/>
-    <!--  
-    <module name="SuppressionCommentFilter">
-      <property name="offCommentFormat" value="CHECKSTYLE_OFF: JAVADOC"/>
-      <property name="onCommentFormat" value="CHECKSTYLE_ON: JAVADOC"/>
-      <property name="checkFormat" value="JavadocMethod"/>
-    </module>
-    -->
   </module>
   <module name="Translation"/>
   <module name="FileLength">
     <property name="max" value="2500"/>
   </module>
-  <module name="FileTabCharacter"/>
+  <module name="FileTabCharacter">
+    <property name="severity" value="ignore"/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+  </module>
   <module name="RegexpSingleline">
     <property name="format" value="\s+$"/>
     <property name="message" value="Line has trailing spaces."/>

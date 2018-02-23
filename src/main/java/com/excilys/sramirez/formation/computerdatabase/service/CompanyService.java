@@ -1,9 +1,9 @@
-package service;
+package main.java.com.excilys.sramirez.formation.computerdatabase.service;
 
 import java.util.ArrayList;
 
-import DAO.CompanyDAO;
-import bean.Company;
+import main.java.com.excilys.sramirez.formation.computerdatabase.DAO.CompanyDAO;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 
 public class CompanyService {
 	

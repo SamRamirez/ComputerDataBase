@@ -1,4 +1,4 @@
-package DAO;
+package main.java.com.excilys.sramirez.formation.computerdatabase.DAO;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -12,8 +12,8 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
-import bean.Computer;
-import connection.Connect;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
+import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
 
 public class ComputerDAO {
 	
