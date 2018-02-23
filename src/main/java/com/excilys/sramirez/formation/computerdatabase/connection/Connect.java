@@ -28,13 +28,16 @@ public class Connect {
         password = bundle.getString("password");
         url = bundle.getString("url");
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			//Class.forName("com.mysql.jdbc.Driver");
 
 			//url = "jdbc:mysql://127.0.0.1:3306/computer-database-db?useSSL=false";
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+		}
+//		catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}	
 	}
 
 	public static Connect getInstance() {

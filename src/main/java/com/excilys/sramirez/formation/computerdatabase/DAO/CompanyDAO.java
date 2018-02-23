@@ -1,20 +1,20 @@
 package main.java.com.excilys.sramirez.formation.computerdatabase.DAO;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
-
-import com.mysql.jdbc.PreparedStatement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
 
 public class CompanyDAO {
 	
-	private static final Logger logger = Logger.getLogger(CompanyDAO.class);
+	private static final Logger logger = LogManager.getLogger(CompanyDAO.class);
 
 	
 	private final static CompanyDAO instance = new CompanyDAO();

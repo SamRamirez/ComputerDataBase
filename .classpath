@@ -18,11 +18,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/excilys/Documents/mysql connector/mysql-connector-java-5.1.45/mysql-connector-java-5.1.45-bin.jar"/>
-	<classpathentry kind="lib" path="/home/excilys/Documents/pour log4J/log4j-1.2-api-2.10.0.jar"/>
-	<classpathentry kind="lib" path="/home/excilys/Documents/pour log4J/log4j-api-2.10.0.jar"/>
-	<classpathentry kind="lib" path="/home/excilys/Documents/pour log4J/log4j-core-2.10.0.jar"/>
-	<classpathentry kind="lib" path="/home/excilys/Documents/pour log4J/log4j-iostreams-2.10.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

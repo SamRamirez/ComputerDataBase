@@ -3,7 +3,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
@@ -13,7 +14,7 @@ import main.java.com.excilys.sramirez.formation.computerdatabase.service.Page;
 
 public class CommandLines {
 
-	private static final Logger logger = Logger.getLogger( CommandLines.class ) ;
+	private static final Logger logger = LogManager.getLogger( CommandLines.class ) ;
 
 	//pourquoi il faut le mettre en static?!
 	static ComputerService computerService = ComputerService.getInstance();

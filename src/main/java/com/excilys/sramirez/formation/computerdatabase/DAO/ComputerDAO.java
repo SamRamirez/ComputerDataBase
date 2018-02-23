@@ -10,14 +10,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
 import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
 
 public class ComputerDAO {
 	
-	private static final Logger logger = Logger.getLogger(ComputerDAO.class);
+	private static final Logger logger = LogManager.getLogger(ComputerDAO.class);
 
 	private ComputerDAO() {
 	}
