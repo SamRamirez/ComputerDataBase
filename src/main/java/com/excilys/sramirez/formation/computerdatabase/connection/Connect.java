@@ -23,12 +23,12 @@ public class Connect {
 	private final static Connect instance = new Connect();
 
 	private Connect() {
-		ResourceBundle bundle = ResourceBundle.getBundle("main.resources.connect");
+		ResourceBundle bundle = ResourceBundle.getBundle("connect");
         login = bundle.getString("login");
         password = bundle.getString("password");
         url = bundle.getString("url");
 		try {
-			//Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.jdbc.Driver");
 
 			//url = "jdbc:mysql://127.0.0.1:3306/computer-database-db?useSSL=false";
 		} catch (Exception e){

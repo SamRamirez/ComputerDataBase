@@ -1,10 +1,14 @@
 package main.java.com.excilys.sramirez.formation.computerdatabase.service;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.DAO.ComputerDAO;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
+import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
 
 public class ComputerService {
 	
@@ -18,7 +22,11 @@ public class ComputerService {
 	private ComputerService() {
 	}
 
-	ComputerDAO compDAO= ComputerDAO.getInstance();
+	ComputerDAO compDAO = ComputerDAO.getInstance();
+	
+	public int countComputers() {
+		return compDAO.countComputers();
+	}
 	
 	public ArrayList<Computer> listComputer(int page, int numberOfElements) {
 		return compDAO.listComputer(page, numberOfElements);

@@ -26,7 +26,7 @@ public class CommandLines {
 		LocalDate discontinued;
 		Scanner sc;
 		String entry = "";
-		System.out.println("Fonctions disponibles :\n - list computers ()\n - list computers (page)\n - list companies ()\n - list companies (page)\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company(/0))\n - update computer (id, name, introduced(/null), discontinued(/null))\n - update computer (id, name, introduced(/null), discontinued(/null), id_company(/0))\n - delete computer (id)\n - info computer (id)\n - exit ()");
+		System.out.println("Fonctions disponibles :\n - count computers ()\n - list computers ()\n - list computers (page)\n - list companies ()\n - list companies (page)\n - create computer (name, introduced, discontinued(optionnel), company_id)\n - create computer (name)\n - create computer (name, company_id)\n - update computer (id, name)\n - update computer (id, name, id_company(/0))\n - update computer (id, name, introduced(/null), discontinued(/null))\n - update computer (id, name, introduced(/null), discontinued(/null), id_company(/0))\n - delete computer (id)\n - info computer (id)\n - exit ()");
 		System.out.println("les dates sont au format aaaa-mm-dd");
 		System.out.println("ENTREZ LA COMMANDE");
 		int id = 0;
@@ -38,6 +38,10 @@ public class CommandLines {
 			String entryParsed = entry.substring(0, entry.indexOf("(") + 1);
 			switch (Command.fromNameToEnum(entryParsed)) {
 
+			case COUNT_COMPUTER :
+				int isItAnInteger = computerService.countComputers();
+				System.out.println(isItAnInteger);
+				break;
 			case LIST_COMPUTERS : 
 				int pageComputerNumber = 1;
 				int numberOfComputers = 10;

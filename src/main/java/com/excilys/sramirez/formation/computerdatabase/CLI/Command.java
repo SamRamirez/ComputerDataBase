@@ -8,6 +8,7 @@ public enum Command {
   CREATE_COMPUTER ("create computer ("),
   UPDATE_COMPUTER ("update computer ("),
   DELETE_COMPUTER ("delete computer ("),
+  COUNT_COMPUTER ("count computers ("),
   EXIT ("exit ()"),
   DEFAULT ("default");
   
