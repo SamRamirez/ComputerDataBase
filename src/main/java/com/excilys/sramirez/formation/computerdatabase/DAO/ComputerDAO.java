@@ -94,6 +94,7 @@ public class ComputerDAO {
 	        PreparedStatement pstmt = conn.prepareStatement(queryCreateComputer);
 	        
 	        pstmt.setString(1, comp.getName());
+	        //pour faire le traitement avec les if, on peut plutot le faire par une classe mapper : on passe à la méthode de mapper les arguments, et on construit le computer avec
 	        if(comp.getIntroduced()!=null) {
 	        	pstmt.setDate(2, Date.valueOf(comp.getIntroduced()));
 	        }else {

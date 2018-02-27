@@ -13,7 +13,6 @@ public class Page {
 	
 
 	public Page(int numberOfElements, int pageNumber) {
-		super();
 		this.numberOfElements = numberOfElements;
 		this.pageNumber = pageNumber;
 		this.listElements = new ArrayList<>(numberOfElements);

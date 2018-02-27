@@ -33,6 +33,8 @@ public class ServletDashboard extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int firstPage = 1;
 		int nbEltsPerPage =  10;
+		
+		//parler en DTO, c'est mieux
 		ArrayList<Computer> listCompu = computerService.listComputer(firstPage, nbEltsPerPage);
 		request.setAttribute("listComputers", listCompu);
 		

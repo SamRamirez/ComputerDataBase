@@ -24,4 +24,9 @@ private final static CompanyService instance = new CompanyService();
 		return companyDAO.listCompany(page, numberOfElements);
 	}
 
+	public String getCompanyName(int companyId) {
+		String toReturn = companyDAO.getCompanyName(companyId);
+		return toReturn;
+	}
+
 }
