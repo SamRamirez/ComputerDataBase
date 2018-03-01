@@ -7,11 +7,74 @@ public class Computer extends Element{
 	private String name;
 	private LocalDate introduced;
 	private LocalDate discontinued;
-	private int companyId;
+	//private int companyId;
+	private Company company = new Company();
 	
 
-	
-	
+
+
+public Computer(ComputerBuilder computerBuilder) {
+        
+        this.setId(computerBuilder.id);
+        this.setName(computerBuilder.name);
+        this.setIntroduced(computerBuilder.introduced);
+        this.setDiscontinued(computerBuilder.discontinued);
+        this.setCompany(computerBuilder.company);
+        
+    }
+    
+    
+    /**
+     * Pattern Builder.
+     * @author excilys
+     *
+     */
+    public static class ComputerBuilder {
+        
+        int id;
+        String name;
+        LocalDate introduced;
+        LocalDate discontinued;
+        Company company;
+        
+        public ComputerBuilder() {
+            this.name = "default";
+            this.id = 0;
+        }
+        
+        public ComputerBuilder withId(int id) {
+            this.id = id;
+            return this;
+        }
+        
+        public ComputerBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+        
+        public ComputerBuilder withDateIntro(LocalDate introduced) {
+            this.introduced = introduced;
+            return this;
+        }
+        
+        public ComputerBuilder withDateDisc(LocalDate discontinued) {
+            this.discontinued = discontinued;
+            return this;
+        }
+        
+        public ComputerBuilder withCompany(Company company) {
+            this.company = company;
+            return this;
+        }
+        
+        public Computer build() {
+            return new Computer(this);
+        }
+         
+    }
+    
+    
+
 	public Computer() {
 	}
 	
@@ -24,14 +87,14 @@ public class Computer extends Element{
 	public Computer(String name , LocalDate introduced , int companyId ) {
 		this.name = name ;
 		this.introduced = introduced ;
-		this.companyId = companyId ;
+		this.company.setId(companyId);
 	}
 	
 	public Computer(String name , LocalDate introduced , LocalDate discontinued , int companyId ) {
 		this.name = name ;
 		this.introduced = introduced ;
 		this.discontinued = discontinued ;
-		this.companyId = companyId ;
+		this.company.setId(companyId);
 	}
 	
 	public Computer(int id, String name , LocalDate introduced , LocalDate discontinued , int companyId ) {
@@ -39,9 +102,29 @@ public class Computer extends Element{
 		this.name = name ;
 		this.introduced = introduced ;
 		this.discontinued = discontinued ;
-		this.companyId = companyId ;
+		this.company.setId(companyId); 
+	}
+	
+	public Computer(int id, String name , LocalDate introduced , LocalDate discontinued, Company company) {
+		this.id=id;
+		this.name = name ;
+		this.introduced = introduced ;
+		this.discontinued = discontinued ;
+		this.company = company;
 	}
 
+
+	
+	
+	
+	
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 
 	public int getId() {
 		return id;
@@ -67,12 +150,7 @@ public class Computer extends Element{
 	public void setDiscontinued(LocalDate discontinued) {
 		this.discontinued = discontinued;
 	}
-	public int getCompanyId() {
-		return companyId;
-	}
-	public void setCompanyId(int companyId) {
-		this.companyId = companyId;
-	}
+
 
 	@Override
 	public int hashCode() {
@@ -99,7 +177,7 @@ public class Computer extends Element{
 	@Override
 	public String toString() {
 		return "Computer [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
-				+ ", companyId=" + companyId + "]";
+				+ ", companyId=" + company.getId() + "]";
 	}
 	
 	

@@ -11,6 +11,7 @@ import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
 import main.java.com.excilys.sramirez.formation.computerdatabase.service.CompanyService;
 import main.java.com.excilys.sramirez.formation.computerdatabase.service.ComputerService;
 import main.java.com.excilys.sramirez.formation.computerdatabase.service.Page;
+import test.java.com.excilys.sramirez.formation.computerdatabase.bean.Element;
 
 public class CommandLines {
 
@@ -48,7 +49,8 @@ public class CommandLines {
 				if ( ! (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals("")) ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals(" ")) ) {	
 					pageComputerNumber = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				}
-				Page pageComputer = new Page(numberOfComputers, pageComputerNumber);
+				//ICI DRAPEAU
+				Page pageComputer = new Page(numberOfComputers, pageComputerNumber, (x,y) -> computerService.listComputer(x, y));
 				pageComputer.setListElements( computerService.listComputer(pageComputerNumber, numberOfComputers) );
 				for(int i =0; i<pageComputer.getNumberOfElements(); i++) {
 					System.out.print(((Computer) pageComputer.getListElements().get(i)).getId());
@@ -64,7 +66,8 @@ public class CommandLines {
 				if ( !( (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals("")) ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")).equals(" ")) ) ) {				
 					pageCompanyNumber = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				}
-				Page pageCompany = new Page(numberOfCompanies, pageCompanyNumber);
+				//ICI DRAPEAU
+				Page pageCompany = new Page(numberOfCompanies, pageCompanyNumber, (x,y) -> companyService.listCompany(x, y));
 				pageCompany.setListElements(companyService.listCompany(pageCompanyNumber, numberOfCompanies));
 				for(int i =0; i<pageCompany.getNumberOfElements(); i++) {
 					System.out.print(((Company) pageCompany.getListElements().get(i)).getId());
@@ -146,7 +149,7 @@ public class CommandLines {
 					switch(listePositionsVirgules.size()-1){
 						case 1 : 
 							name=entry.substring(listePositionsVirgules.get(1)+1, entry.length()-1);
-							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), computerReferant.getCompanyId());
+							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), computerReferant.getCompany().getId());
 						break;
 						case 2 :
 							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
@@ -165,7 +168,7 @@ public class CommandLines {
 							}else {
 								discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, entry.length()-1));
 							}	
-							computerService.updateComp(id, name, introduced, discontinued, computerReferant.getCompanyId());
+							computerService.updateComp(id, name, introduced, discontinued, computerReferant.getCompany().getId());
 						break;
 						case 4 : 
 							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
