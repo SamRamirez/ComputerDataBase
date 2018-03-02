@@ -13,7 +13,9 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer.ComputerBuilder;
 import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
 
 public class ComputerDAO {
@@ -32,7 +34,8 @@ public class ComputerDAO {
 	//alternative1 commentée
 	//String queryCountComputers =  "SELECT COUNT(*) as nbComputers from computer";
 	String queryCountComputers =  "SELECT COUNT(*) from computer";
-	String queryListComputers = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ?, ?";
+	//String queryListComputers = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ?, ?";
+	String queryListComputers = "SELECT computer.id, computer.name, introduced, discontinued, company.id, company.name FROM computer LEFT JOIN company ON company_id=company.id LIMIT ?, ?";
 	String queryCreateComputer = "INSERT INTO computer (name, introduced, discontinued, company_id)  VALUES (?, ?, ?, ?)";
 	String queryInfoComputer = "SELECT name, introduced, discontinued, company_id from computer where id=?";
 	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
@@ -63,22 +66,35 @@ public class ComputerDAO {
 	        pstmt.setInt(2, numberOfElements);
 			ResultSet results = pstmt.executeQuery();
 			while (results.next()) {
-				int id = results.getInt("id");
-				String name = results.getString("name");
+				Computer c;
+				ComputerBuilder computerBuilder = new Computer.ComputerBuilder();
+				int id = results.getInt("computer.id");
+				String name = results.getString("computer.name");
+				
+				computerBuilder.withId(id).withName(name);
+				
 				LocalDate introduced;
 				if (results.getDate("introduced") != null) {
 					introduced = results.getDate("introduced").toLocalDate();
+					computerBuilder.withDateIntro(introduced);
 				} else {
 					introduced = null;
 				}
 				LocalDate discontinued;
 				if (results.getDate("discontinued") != null) {
 					discontinued = results.getDate("discontinued").toLocalDate();
+					computerBuilder.withDateDisc(discontinued);
 				} else {
 					discontinued = null;
 				}
-				int company_id = results.getInt("company_id");
-				Computer c = new Computer(id, name, introduced, discontinued, company_id);
+				int companyId = results.getInt("company.id");
+				String companyName = results.getString("company.name");
+				Company company = new Company(companyId, companyName);
+				
+				//on utilise ca ou bien le computer builder
+				//Computer c = new Computer(id, name, introduced, discontinued, company);
+				
+				c = computerBuilder.withCompany(company).build();
 				listComp.add(c);
 			}
 
@@ -94,6 +110,7 @@ public class ComputerDAO {
 	        PreparedStatement pstmt = conn.prepareStatement(queryCreateComputer);
 	        
 	        pstmt.setString(1, comp.getName());
+	        //pour faire le traitement avec les if, on peut plutot le faire par une classe mapper : on passe à la méthode de mapper les arguments, et on construit le computer avec
 	        if(comp.getIntroduced()!=null) {
 	        	pstmt.setDate(2, Date.valueOf(comp.getIntroduced()));
 	        }else {
@@ -104,8 +121,8 @@ public class ComputerDAO {
 	        }else {
 	        	pstmt.setDate(3, null);
 	        }
-	        if(comp.getCompanyId()!=0) {
-	        	pstmt.setInt(4, comp.getCompanyId());
+	        if(comp.getCompany().getId()!=0) {
+	        	pstmt.setInt(4, comp.getCompany().getId());
 	        }else {
 	        	pstmt.setNull(4, Types.INTEGER);
 	        }
@@ -178,8 +195,8 @@ public class ComputerDAO {
 			} else {
 	        	pstmt.setDate(3, null);
 			}
-			if (comp.getCompanyId()!=0) {
-				pstmt.setInt(4, comp.getCompanyId());
+			if (comp.getCompany().getId()!=0) {
+				pstmt.setInt(4, comp.getCompany().getId());
 			}else {
 				pstmt.setNull(4, Types.INTEGER);
 			}

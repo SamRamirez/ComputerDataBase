@@ -27,6 +27,7 @@ public class CompanyDAO {
 	}
 	
 	String queryListCompany = "select id, name from company LIMIT ?, ?";
+	String queryNameCompany = "SELECT name from company WHERE id = ?";
 
 
 	public ArrayList<Company> listCompany(int page, int numberOfElements) {
@@ -52,6 +53,20 @@ public class CompanyDAO {
 		//Connect.close();
 		
 		return listComp;
+	}
+
+	public String getCompanyName(int companyId) {
+		String name = "";
+		try (Connection conn =  Connect.getInstance().getConnection();) {
+			PreparedStatement pstmt;
+			pstmt = (PreparedStatement) conn.prepareStatement(queryNameCompany);
+			pstmt.setInt(1, companyId);
+			ResultSet results = pstmt.executeQuery();
+			name = results.getString("name");
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+		return name;
 	}
 
 }

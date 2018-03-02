@@ -9,14 +9,23 @@ public class Page {
 	private int pageNumber;
 	private ArrayList<? extends Element> listElements;
 	
-	
-	
+//	private ComputerService computerService = ComputerService.getInstance();
+//	private CompanyService companyService = CompanyService.getInstance();
+	private Function<?,?,ArrayList<? extends Element>> f;
 
-	public Page(int numberOfElements, int pageNumber) {
-		super();
+	public Page(int numberOfElements, int pageNumber, Function<Integer, Integer, ArrayList<? extends Element>> func) {
 		this.numberOfElements = numberOfElements;
 		this.pageNumber = pageNumber;
-		this.listElements = new ArrayList<>(numberOfElements);
+		this.f = func;
+		this.listElements = func.apply(numberOfElements, pageNumber);
+	}
+
+	public Function<?, ?, ArrayList<? extends Element>> getF() {
+		return f;
+	}
+
+	public void setF(Function<?, ?, ArrayList<? extends Element>> f) {
+		this.f = f;
 	}
 
 	public int getNumberOfElements() {
