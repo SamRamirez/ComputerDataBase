@@ -37,6 +37,7 @@ public class ServletDashboard extends HttpServlet {
 		request.setAttribute("listComputers", listCompu);
 		
 		int nbCompu = computerService.countComputers();
+		int maxPage = (nbCompu / nbEltsPerPage) + 1;
 		request.setAttribute("nbCompu", nbCompu);		
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request,  response);
 		
