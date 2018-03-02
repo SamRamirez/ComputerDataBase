@@ -114,16 +114,21 @@
 <!--                   </a> -->
 <!--               </li> -->
 
-				<li><a href="ServletDashboard?localisationPages=${localisationPages - 5}" >previsou</a>
-				</li>
+
+				<c:if test = "${localisationPages > 5}">
+					<li><a
+						href="ServletDashboard?localisationNext=${localisationNext - 5 }&page=${page}&localisationPages=${localisationPages}">previsou</a>
+					</li>
+				</c:if>
 
 				<c:forEach var="i" begin="${localisationPages}" end="${ localisationPages + 4}">
-					<li><a href="ServletDashboard?page=${i}">${i}</a></li>
+					<li><a href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}">${i}</a></li>
 				</c:forEach>
 
-				<li><a href="ServletDashboard?localisationPages=${localisationPages + 5}" > nextou</a>
-				</li>
-
+				<c:if test = "${localisationPages < (nbCompu/10)+1}">
+					<li><a
+						href="ServletDashboard?localisationNext=${localisationNext + 5 }&page=${page}&localisationPages=${localisationPages}">nextou</a></li>
+				</c:if>
 
 				<!--               <li> -->
 <!--                 <a href="#" aria-label="Next"> -->

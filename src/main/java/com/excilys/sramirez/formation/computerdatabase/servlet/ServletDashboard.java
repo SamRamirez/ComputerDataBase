@@ -68,14 +68,27 @@ public class ServletDashboard extends HttpServlet {
 
         //pour le next page et le prévious page
         int localisationPages;
+        int localisationNext;
+        
+        if (request.getParameter("localisationNext") != null ) {
+        	localisationNext = Integer.valueOf(request.getParameter("localisationNext"));
+        	logger.debug("localisation next = "+localisationNext);
+        } else {
+        	localisationNext=0;
+        	logger.debug("pas localisation next");
+        }
+        request.setAttribute("localisationNext", localisationNext);
+
         if (request.getParameter("localicationPages") != null ) {
         	localisationPages = Integer.valueOf(request.getParameter("localisationPages"));
+        	logger.debug("localisation page = "+localisationPages);
         } else {
         	localisationPages = firstLocalisationPages;
         }
+        localisationPages+=localisationNext;
         request.setAttribute("localisationPages", localisationPages);
         logger.debug("localisationPages = "+ localisationPages);
-        
+        logger.debug("localisationNext = "+ localisationNext);
         
         
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request,  response);
