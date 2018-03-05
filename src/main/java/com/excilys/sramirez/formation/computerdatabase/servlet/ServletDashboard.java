@@ -38,14 +38,13 @@ public class ServletDashboard extends HttpServlet {
 		int firstPage = 1;
 		int nbEltsPerPage =  10;
 		int firstLocalisationPages = 1;
+		int nbAcessiblePages = 5;
+		request.setAttribute("nbAcessiblePages", nbAcessiblePages);
 		
-		//les computers à afficher
-//		ArrayList<ComputerDTO> listCompu = computerMapper.toDTO(computerService.listComputer(firstPage, nbEltsPerPage));
-//		request.setAttribute("listComputers", listCompu);
-		
-		//le nombre de computers
+		//le nombre de computers et de pages
 		int nbCompu = computerService.countComputers();
 		int maxPage = (nbCompu / nbEltsPerPage) + 1;
+		request.setAttribute("maxPage", maxPage);
 		request.setAttribute("nbCompu", nbCompu);		
 		
 		//on va passer les liens vers les pages suivantes à la jsp

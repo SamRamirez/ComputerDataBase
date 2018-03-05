@@ -33,7 +33,11 @@
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer.html">Add Computer</a> 
+
+                	<a class="btn btn-success" id="addComputer" href="ServletAddComputer">Add Computer</a>
+                
+<!--                     <a class="btn btn-success" id="addComputer" href="addComputer.html">Add Computer</a>  -->
+
                     <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
@@ -117,17 +121,30 @@
 
 				<c:if test = "${localisationPages > 5}">
 					<li><a
-						href="ServletDashboard?localisationNext=${localisationNext - 5 }&page=${page}&localisationPages=${localisationPages}">previsou</a>
+						href="ServletDashboard?localisationNext=${localisationNext - 5 }&page=${page}&localisationPages=${localisationPages}"><aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a>
 					</li>
 				</c:if>
 
-				<c:forEach var="i" begin="${localisationPages}" end="${ localisationPages + 4}">
-					<li><a href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}">${i}</a></li>
-				</c:forEach>
 
-				<c:if test = "${localisationPages < (nbCompu/10)+1}">
+				<c:if test="${ (localisationPages + 4) <= (maxPage) }">
+					<c:forEach var="i" begin="${localisationPages}" end="${ localisationPages + 4}">
+						<li><a
+							href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}">${i}</a></li>
+					</c:forEach>
+				</c:if>
+				<!--else -->
+				<c:if test="${ (localisationPages + 4) > maxPage}">
+				<c:forEach var="i" begin="${localisationPages}" end="${maxPage}">
+						<li><a
+							href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}">${i}</a></li>
+					</c:forEach>
+				</c:if>
+
+
+				<c:if test = "${(localisationPages + 4) <= maxPage}">
 					<li><a
-						href="ServletDashboard?localisationNext=${localisationNext + 5 }&page=${page}&localisationPages=${localisationPages}">nextou</a></li>
+						href="ServletDashboard?localisationNext=${localisationNext + 5 }&page=${page}&localisationPages=${localisationPages}"><aria-label="Next"> 
+                     <span aria-hidden="true">&raquo;</span></a></li>
 				</c:if>
 
 				<!--               <li> -->

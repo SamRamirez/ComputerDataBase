@@ -1,10 +1,13 @@
 package main.java.com.excilys.sramirez.formation.computerdatabase.Mapper;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.ComputerDTO;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer.ComputerBuilder;
 import main.java.com.excilys.sramirez.formation.computerdatabase.service.CompanyService;
 import main.java.com.excilys.sramirez.formation.computerdatabase.service.ComputerService;
 
@@ -63,6 +66,37 @@ private final static ComputerMapper instance = new ComputerMapper();
 		ArrayList<ComputerDTO> listComputerDTO = new ArrayList<ComputerDTO>();
 		listComputers.forEach(x->listComputerDTO.add(toDTO(x)));
 		return listComputerDTO;
+	}
+	
+	public Computer fromDTO(ComputerDTO computerDTO) {
+		Computer c;
+		ComputerBuilder computerBuilder = new Computer.ComputerBuilder();
+		
+		String name;
+		if (computerDTO.getName() != null) {
+			name = computerDTO.getName();
+			computerBuilder.withName(name);
+		}
+		LocalDate introduced;
+		if (computerDTO.getIntroduced() != null) {
+			introduced = LocalDate.parse( computerDTO.getIntroduced() );
+			computerBuilder.withDateIntro(introduced);
+		} 
+
+		LocalDate discontinued;
+		if (computerDTO.getDiscontinued() != null) {
+			discontinued = LocalDate.parse( computerDTO.getDiscontinued() );
+			computerBuilder.withDateDisc(discontinued);
+		} 
+		
+		Company compa;
+		if (computerDTO.getCompanyName() != null && computerDTO.getCompanyName() != "") {
+			compa = new Company(computerDTO.getCompanyId(), computerDTO.getCompanyName());
+			computerBuilder.withCompany(compa);
+		}
+		
+		c = computerBuilder.build();
+		return c;
 	}
 
 

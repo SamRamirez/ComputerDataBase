@@ -26,6 +26,7 @@ public class CompanyDAO {
 	private CompanyDAO() {
 	}
 	
+	String queryListCompanyFull = "select id, name from company";
 	String queryListCompany = "select id, name from company LIMIT ?, ?";
 	String queryNameCompany = "SELECT name from company WHERE id = ?";
 
@@ -54,6 +55,29 @@ public class CompanyDAO {
 		
 		return listComp;
 	}
+	
+	public ArrayList<Company> listCompany() {
+		ArrayList<Company> listComp = new ArrayList<Company>();		
+		try (Connection conn =  Connect.getInstance().getConnection();) {
+			PreparedStatement pstmt;
+			pstmt = (PreparedStatement) conn.prepareStatement(queryListCompanyFull);
+
+			ResultSet results = pstmt.executeQuery();
+			while (results.next()) {
+				int id = results.getInt("id");
+				String name = results.getString("name");
+				
+				Company c = new Company(id, name);
+				listComp.add(c);
+			}
+
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+		//Connect.close();
+		
+		return listComp;
+	}
 
 	public String getCompanyName(int companyId) {
 		String name = "";
@@ -62,7 +86,9 @@ public class CompanyDAO {
 			pstmt = (PreparedStatement) conn.prepareStatement(queryNameCompany);
 			pstmt.setInt(1, companyId);
 			ResultSet results = pstmt.executeQuery();
-			name = results.getString("name");
+			if(results.next()) {
+				name = results.getString("name");
+			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}

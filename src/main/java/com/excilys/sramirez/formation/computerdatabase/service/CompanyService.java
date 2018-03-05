@@ -23,6 +23,10 @@ private final static CompanyService instance = new CompanyService();
 	public ArrayList<Company> listCompany(int page, int numberOfElements) {
 		return companyDAO.listCompany(page, numberOfElements);
 	}
+	
+	public ArrayList<Company> listCompany() {
+		return companyDAO.listCompany();
+	}
 
 	public String getCompanyName(int companyId) {
 		String toReturn = companyDAO.getCompanyName(companyId);

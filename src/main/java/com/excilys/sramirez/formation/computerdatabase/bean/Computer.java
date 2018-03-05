@@ -105,8 +105,7 @@ public Computer(ComputerBuilder computerBuilder) {
 		this.company.setId(companyId); 
 	}
 	
-	public Computer(int id, String name , LocalDate introduced , LocalDate discontinued, Company company) {
-		this.id=id;
+	public Computer(String name , LocalDate introduced , LocalDate discontinued, Company company) {
 		this.name = name ;
 		this.introduced = introduced ;
 		this.discontinued = discontinued ;
