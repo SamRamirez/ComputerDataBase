@@ -14,7 +14,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard.html"> Application - Computer Database </a>
+            <a class="navbar-brand" href="ServletDashboard"> Application - Computer Database </a>
         </div>
     </header>
 
@@ -36,8 +36,6 @@
 
                 	<a class="btn btn-success" id="addComputer" href="ServletAddComputer">Add Computer</a>
                 
-<!--                     <a class="btn btn-success" id="addComputer" href="addComputer.html">Add Computer</a>  -->
-
                     <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
@@ -68,11 +66,11 @@
                         <th>
                             Introduced date
                         </th>
-                        Table header for Discontinued Date
+<!--                         Table header for Discontinued Date -->
                         <th>
                             Discontinued date
                         </th>
-                        Table header for Company
+<!--                         Table header for Company -->
                         <th>
                             Company
                         </th>
@@ -80,29 +78,26 @@
                     </tr>
                 </thead>
                 <!-- Browse attribute computers -->
+                
+                <!-- diff ici -->
                 <tbody id="results">
-                    <tr>
-						<c:forEach items="${listComputers}" var="entry">
-						
-						 <td class="editMode">
-                            <input type="checkbox" name="cb" class="cb" value="0">
-                        </td>
-							<tr>
-								<td><a href="editComputer.html" onclick="">${entry.name}</a>
-								</td>
-								<td>
-									${entry.introduced}
-								</td>
-								<td>
-									${entry.discontinued}
-								</td>
-								<td>
-									${entry.companyName}
-								</td>
-							</tr>
-						</c:forEach>
-                    
-                </tbody>
+
+					<c:forEach items="${listComputers}" var="entry">
+						<tr>
+
+							<td class="editMode"><input type="checkbox" name="cb"
+								class="cb" value="${entry.id }"></td>
+							<!-- 							<tr> -->
+							<td><a href="ServletEdit?id=${entry.id }" onclick="">${entry.name}</a>
+							</td>
+							<td>${entry.introduced}</td>
+							<td>${entry.discontinued}</td>
+							<td>${entry.companyName}</td>
+						</tr>
+					</c:forEach>
+
+
+				</tbody>
             </table>
         </div>
     </section>
@@ -121,7 +116,7 @@
 
 				<c:if test = "${localisationPages > 5}">
 					<li><a
-						href="ServletDashboard?localisationNext=${localisationNext - 5 }&page=${page}&localisationPages=${localisationPages}"><aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a>
+						href="ServletDashboard?localisationNext=${localisationNext - 5 }&page=${page}&localisationPages=${localisationPages}" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a>
 					</li>
 				</c:if>
 
@@ -143,7 +138,7 @@
 
 				<c:if test = "${(localisationPages + 4) <= maxPage}">
 					<li><a
-						href="ServletDashboard?localisationNext=${localisationNext + 5 }&page=${page}&localisationPages=${localisationPages}"><aria-label="Next"> 
+						href="ServletDashboard?localisationNext=${localisationNext + 5 }&page=${page}&localisationPages=${localisationPages}" aria-label="Next"> 
                      <span aria-hidden="true">&raquo;</span></a></li>
 				</c:if>
 
@@ -155,12 +150,32 @@
             
         </ul>
 
-        <div class="btn-group btn-group-sm pull-right" role="group" >
-            <button type="button" class="btn btn-default">10</button>
-            <button type="button" class="btn btn-default">50</button>
-            <button type="button" class="btn btn-default">100</button>
-        </div>
+			<div class="btn-group btn-group-sm pull-right" role="group">
 
+				<c:if test="${ (maxPage)>=10 }">
+					<input type="button" class="btn btn-default"
+						onclick="location.href='ServletDashboard?page=10&localisationNext=10'"
+						value="10" />
+				</c:if>
+				<c:if test="${ (maxPage)>=50 }">
+					<input type="button" class="btn btn-default"
+						onclick="location.href='ServletDashboard?page=50&localisationNext=50'"
+						value="50" />
+				</c:if>
+				<c:if test="${ (maxPage)>=100 }">
+					<input type="button" class="btn btn-default"
+						onclick="location.href='ServletDashboard?page=100&localisationNext=100'"
+						value="100" />
+				</c:if>
+				
+				<input type="button" class="btn btn-default"
+						onclick="location.href='ServletDashboard?page=${maxPage}&localisationNext=${maxPage}'"
+						value="LastPage" />
+
+				<!--             <button type="button" class="btn btn-default">50</button> -->
+				<!--             <button type="button" class="btn btn-default">100</button> -->
+			</div>
+		</div>
     </footer>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>

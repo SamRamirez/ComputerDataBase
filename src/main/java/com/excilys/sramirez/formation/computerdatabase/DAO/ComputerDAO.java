@@ -26,6 +26,8 @@ public class ComputerDAO {
 	}
 
 	private final static ComputerDAO instance = new ComputerDAO();
+	
+	CompanyDAO companyDAO = CompanyDAO.getInstance();
 
 	public static ComputerDAO getInstance() {
 		return instance;
@@ -103,6 +105,8 @@ public class ComputerDAO {
 		}
 		return listComp;
 	}
+	//j'ai du effacer un bout sans faire expres...
+	//if (results.getDate("discontinued") != null) {
 
 	public void createComputer(Computer comp) {
 
@@ -121,7 +125,8 @@ public class ComputerDAO {
 	        }else {
 	        	pstmt.setDate(3, null);
 	        }
-	        if(comp.getCompany().getId()!=0) {
+	        //if(comp.getCompany().getId()!=0) {
+	        if(comp.getCompany() != null) {
 	        	pstmt.setInt(4, comp.getCompany().getId());
 	        }else {
 	        	pstmt.setNull(4, Types.INTEGER);
@@ -136,6 +141,8 @@ public class ComputerDAO {
 	public Optional<Computer> infoComp(int id) {
 		
 		Computer comp = new Computer();
+		int company_id=0;
+		ComputerBuilder cpBuild = new ComputerBuilder();
 
 		try (Connection conn = Connect.getInstance().getConnection();){
 			PreparedStatement pstmt;
@@ -150,21 +157,26 @@ public class ComputerDAO {
 			if (results.next()) {
 
 				String name = results.getString("name");
+				cpBuild.withName(name);
 				LocalDate introduced;
 				if (results.getDate("introduced") != null) {
 					introduced = results.getDate("introduced").toLocalDate();
+					cpBuild.withDateIntro(introduced);
 				} else {
 					introduced = null;
 				}
 				LocalDate discontinued;
 				if (results.getDate("discontinued") != null) {
 					discontinued = results.getDate("discontinued").toLocalDate();
+					cpBuild.withDateDisc(discontinued);
 				} else {
 					discontinued = null;
 				}
-				int company_id = results.getInt("company_id");
+				company_id = results.getInt("company_id");
 
-				comp = new Computer(id, name, introduced, discontinued, company_id);
+				//PROBLEME CONSTRUCTEUR
+				
+				comp = cpBuild.build();
 			} else {
 				comp = new Computer();
 			}
@@ -172,6 +184,8 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
+		String companyName = companyDAO.getCompanyName(company_id);
+		comp.setCompany(new Company(company_id, companyName));
 		return Optional.ofNullable(comp);
 	}
 
@@ -184,7 +198,11 @@ public class ComputerDAO {
 			PreparedStatement pstmt;
 			pstmt = (PreparedStatement) conn.prepareStatement(queryUpdateComputer);
 			pstmt.setInt(5, comp.getId());
-			pstmt.setString(1, comp.getName());
+			if (comp.getName() != "" && comp.getName() != null) {
+				pstmt.setString(1, comp.getName());
+			} else {
+				pstmt.setString(1, null);
+			}
 			if (comp.getIntroduced() != null) {
 	        	pstmt.setDate(2, Date.valueOf(comp.getIntroduced()));
 			} else {
@@ -200,6 +218,7 @@ public class ComputerDAO {
 			}else {
 				pstmt.setNull(4, Types.INTEGER);
 			}
+			System.err.println("id = "+comp.getId()+" name = "+comp.getName());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());

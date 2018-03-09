@@ -91,7 +91,7 @@ public class CommandLines {
 				if (  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")) != "") ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")) != " ") ) {
 					if (entry.indexOf(",")==-1) {
 						name=entry.substring(entry.indexOf("(")+1, entry.indexOf(")"));
-						computerService.createComputer(name, null, null, 0);
+						computerService.createComputer(name, null, null, /*new Company(0, companyService.getCompanyName(0))*/ new Company() );
 					//4, 3 ou 2 args	
 					}else {
 						int indexVirgule1=entry.indexOf(",");
@@ -104,14 +104,14 @@ public class CommandLines {
 							//2 args
 							if(indexVirgule2==indexVirgule1) {
 								company_id = Integer.parseInt(entry.substring(indexVirgule1+2, entry.length()-1));
-								computerService.createComputer(name, null, null, company_id);
+								computerService.createComputer(name, null, null, new Company(company_id,companyService.getCompanyName(company_id)));
 							} else {
 								//traitement pour 3 arguments
 								try {
 									introduced = LocalDate.parse(entry.substring(indexVirgule1+2, indexVirgule2));
 									discontinued=null;
 									company_id = Integer.parseInt(entry.substring(indexVirgule2+2, entry.length()-1));
-									computerService.createComputer(name, introduced, discontinued, company_id);
+									computerService.createComputer(name, introduced, discontinued, new Company(company_id,companyService.getCompanyName(company_id)));
 								}catch(Exception e){
 									System.out.println("entree non valide");
 								}	
@@ -122,7 +122,7 @@ public class CommandLines {
 					        introduced = LocalDate.parse(entry.substring(indexVirgule1+2, indexVirgule2));
 							discontinued = LocalDate.parse(entry.substring(indexVirgule2+2, indexVirgule3));
 							company_id = Integer.parseInt(entry.substring(indexVirgule3+2, entry.length()-1));
-							computerService.createComputer(name, introduced, discontinued, company_id);
+							computerService.createComputer(name, introduced, discontinued, new Company(company_id,companyService.getCompanyName(company_id)));
 						}	
 					}
 				}	
@@ -149,12 +149,13 @@ public class CommandLines {
 					switch(listePositionsVirgules.size()-1){
 						case 1 : 
 							name=entry.substring(listePositionsVirgules.get(1)+1, entry.length()-1);
-							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), computerReferant.getCompany().getId());
+							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), computerReferant.getCompany());
 						break;
 						case 2 :
 							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
 							company_id=Integer.parseInt(entry.substring(listePositionsVirgules.get(2)+1, entry.length()-1));
-							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), company_id);
+							String companyName = companyService.getCompanyName(company_id); 
+							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), new Company(company_id, companyName));
 						break;
 						case 3 : 
 							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
@@ -168,7 +169,7 @@ public class CommandLines {
 							}else {
 								discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, entry.length()-1));
 							}	
-							computerService.updateComp(id, name, introduced, discontinued, computerReferant.getCompany().getId());
+							computerService.updateComp(id, name, introduced, discontinued, computerReferant.getCompany());
 						break;
 						case 4 : 
 							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
@@ -183,7 +184,8 @@ public class CommandLines {
 								discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, listePositionsVirgules.get(4)-1));
 							}	
 							company_id=Integer.parseInt( entry.substring(listePositionsVirgules.get(4)+1, entry.length()-1) );
-							computerService.updateComp(id, name, introduced, discontinued, company_id);
+							companyName = companyService.getCompanyName(company_id);
+							computerService.updateComp(id, name, introduced, discontinued, new Company(company_id, companyName) );
 						break;
 						default :
 							System.out.println("nous ne verrons jamais ce message");

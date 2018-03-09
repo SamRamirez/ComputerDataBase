@@ -97,12 +97,20 @@ public Computer(ComputerBuilder computerBuilder) {
 		this.company.setId(companyId);
 	}
 	
-	public Computer(int id, String name , LocalDate introduced , LocalDate discontinued , int companyId ) {
+	public Computer(int id, String name , LocalDate introduced , LocalDate discontinued , Company company ) {
 		this.id=id;
 		this.name = name ;
 		this.introduced = introduced ;
 		this.discontinued = discontinued ;
-		this.company.setId(companyId); 
+		this.company = company; 
+	}
+	
+	public Computer(int id, String name , LocalDate introduced , LocalDate discontinued , int company_id ) {
+		this.id=id;
+		this.name = name ;
+		this.introduced = introduced ;
+		this.discontinued = discontinued ;
+		this.company.setId(company_id); 
 	}
 	
 	public Computer(String name , LocalDate introduced , LocalDate discontinued, Company company) {

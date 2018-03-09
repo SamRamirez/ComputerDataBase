@@ -43,7 +43,12 @@ public class ServletDashboard extends HttpServlet {
 		
 		//le nombre de computers et de pages
 		int nbCompu = computerService.countComputers();
-		int maxPage = (nbCompu / nbEltsPerPage) + 1;
+		int maxPage;
+		if(nbCompu % nbEltsPerPage != 0) {
+			maxPage = (nbCompu / nbEltsPerPage) + 1;
+		}else {
+			maxPage = (nbCompu / nbEltsPerPage);
+		}
 		request.setAttribute("maxPage", maxPage);
 		request.setAttribute("nbCompu", nbCompu);		
 		
@@ -95,9 +100,23 @@ public class ServletDashboard extends HttpServlet {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			String selection = (String) request.getParameter("selection");
 
+			logger.debug(selection);
+
+			if (selection != null) {
+				String[] toDeleteList = selection.split(",");
+
+				for (String toDelete : toDeleteList) {
+					int id = Integer.parseInt(toDelete);
+					computerService.deleteComp(id);
+				}
+			}
+			
+			response.sendRedirect("ServletDashboard");
 	}
+		
 	
 	
 

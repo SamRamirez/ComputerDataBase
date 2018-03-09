@@ -74,7 +74,7 @@ public class ServletAddComputer extends HttpServlet {
 		Computer c = computerMapper.fromDTO(compuDTO);
 		
 		//changer le service pour que si certains atributs du computer sont à null, ca marche quand meme (on va passer un computer directement en parametre du service et on gere les null autre part)
-		computerService.createComputer(c.getName(), c.getIntroduced(), c.getDiscontinued(), c.getCompany().getId());
+		computerService.createComputer(c.getName(), c.getIntroduced(), c.getDiscontinued(), c.getCompany());
 		
 		
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(request,  response);

@@ -26,7 +26,7 @@ public class MainTest {
 
 		
 		
-		compService.createComputer("Abc", LocalDate.of(2000, 5, 26), null, 3);
+		compService.createComputer("Abc", LocalDate.of(2000, 5, 26), null, new Company());
 		
 		
 		

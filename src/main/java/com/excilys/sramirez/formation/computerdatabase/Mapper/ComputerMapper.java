@@ -73,18 +73,18 @@ private final static ComputerMapper instance = new ComputerMapper();
 		ComputerBuilder computerBuilder = new Computer.ComputerBuilder();
 		
 		String name;
-		if (computerDTO.getName() != null) {
+		if (computerDTO.getName() != "") {
 			name = computerDTO.getName();
 			computerBuilder.withName(name);
 		}
 		LocalDate introduced;
-		if (computerDTO.getIntroduced() != null) {
+		if (computerDTO.getIntroduced() != "") {
 			introduced = LocalDate.parse( computerDTO.getIntroduced() );
 			computerBuilder.withDateIntro(introduced);
 		} 
 
 		LocalDate discontinued;
-		if (computerDTO.getDiscontinued() != null) {
+		if (computerDTO.getDiscontinued() != "") {
 			discontinued = LocalDate.parse( computerDTO.getDiscontinued() );
 			computerBuilder.withDateDisc(discontinued);
 		} 
