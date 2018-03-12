@@ -74,9 +74,7 @@ public class ServletEditComputer extends HttpServlet {
 
 		Computer computerUpdated = computerMapper.fromDTO(compuDTO);
 		Computer c = computerService.complete(compuReferent, computerUpdated);
-		System.err.println("pre update");
 		computerService.updateComp(idCompu, c.getName(), c.getIntroduced(), c.getDiscontinued(), c.getCompany());
-		System.err.println("post update");
 		
 		
 		response.sendRedirect("ServletDashboard");

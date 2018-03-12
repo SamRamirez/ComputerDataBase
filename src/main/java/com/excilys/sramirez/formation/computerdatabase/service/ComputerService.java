@@ -34,6 +34,10 @@ public class ComputerService {
 		return compDAO.listComputer(page, numberOfElements);
 	}
 	
+	public ArrayList<Computer> listComputerFiltered(int page, int numberOfElements, String filter){
+		return compDAO.listComputerFiltered(page, numberOfElements, filter);
+	}
+	
 	public Computer createComputer(String name, LocalDate introduced, LocalDate discontinued, Company company) {
 		Computer comp;
 		ComputerBuilder computerBuilder = new Computer.ComputerBuilder();
@@ -71,9 +75,7 @@ public class ComputerService {
 	public Computer updateComp(int id, String name, LocalDate introduced, LocalDate discontinued, Company company) {
 		Computer comp;		
 		comp = new Computer(id, name, introduced, discontinued, company); 
-		System.err.println("pre dao update");
 		compDAO.updateComp(comp);
-		System.err.println("post dao update");
 		return comp;		
 	}
 	
@@ -87,7 +89,6 @@ public class ComputerService {
 		Computer c3 = new Computer();
 		ComputerBuilder compBuilder = new ComputerBuilder();
 		if(c2.getName()  != null && c2.getName()  != "" && c2.getName() != "default") {
-			System.err.println("AAAAAAAAAAAAA");
 			compBuilder.withName(c2.getName());
 		}else if (c1.getName() != null && c1.getName() != "" && c1.getName() != "default") {
 			compBuilder.withName(c1.getName());

@@ -21,15 +21,23 @@
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-                ${nbCompu} Computers found
+                ${nbCompu} Computers found 
+                <br> page number ${page}
+<%--                 <c:if test = "(${filter == null || filter == \"\" })"> --%>
+                	<br> ${filter == "" || filter == null} true
+<%--                 </c:if> --%>
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
-                    <form id="searchForm" action="#" method="GET" class="form-inline">
-
-                        <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
-                        <input type="submit" id="searchsubmit" value="Filter by name"
-                        class="btn btn-primary" />
+                    <form id="searchForm" action="ServletDashboard" method="GET" class="form-inline">
+						<c:if test = "${filter != null && filter != \"\"}">
+						    <input type="search" id="searchbox" name="filter" class="form-control" placeholder="${filter}" />
+							<input type="submit" id="searchsubmit" value="Filter Reset" class="btn btn-primary" />
+						</c:if>
+						<c:if test = "${filter == null || filter == \"\" }">
+                        	<input type="search" id="searchbox" name="filter" class="form-control" placeholder="Search name" />
+                       		<input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
+                        </c:if>       
                     </form>
                 </div>
                 <div class="pull-right">
@@ -116,7 +124,20 @@
 
 				<c:if test = "${localisationPages > 5}">
 					<li><a
-						href="ServletDashboard?localisationNext=${localisationNext - 5 }&page=${page}&localisationPages=${localisationPages}" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a>
+						href="ServletDashboard?localisationNext=${localisationNext - 5 }&page=${page}&localisationPages=${localisationPages}"> 5 previous pages </a>
+					</li>
+				</c:if>
+				
+<%-- 				<c:if test = "${localisationPages > 1}"> --%>
+<!-- 					<li><a -->
+<%-- 						href="ServletDashboard?localisationNext=${localisationNext}&page=${page-1}&localisationPages=${localisationPages}" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a> --%>
+<!-- 					</li> -->
+<%-- 				</c:if> --%>
+
+				<c:if test="${localisationPages > 1}">
+					<li><a
+						href="ServletDashboard?localisationNext=${localisationNext}&page=${page-1}&localisationPages=${localisationPages}&filter=${filter}"
+						aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a>
 					</li>
 				</c:if>
 
@@ -124,22 +145,26 @@
 				<c:if test="${ (localisationPages + 4) <= (maxPage) }">
 					<c:forEach var="i" begin="${localisationPages}" end="${ localisationPages + 4}">
 						<li><a
-							href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}">${i}</a></li>
+							href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}&filter=${filter}">${i}</a></li>
 					</c:forEach>
 				</c:if>
 				<!--else -->
 				<c:if test="${ (localisationPages + 4) > maxPage}">
 				<c:forEach var="i" begin="${localisationPages}" end="${maxPage}">
 						<li><a
-							href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}">${i}</a></li>
+							href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}&filter=${filter}">${i}</a></li>
 					</c:forEach>
+				</c:if>
+				
+				<c:if test = "${ localisationPages < maxPage}">
+					<li><a
+						href="ServletDashboard?localisationNext=${localisationNext}&page=${page + 1}&localisationPages=${localisationPages}&filter=${filter}" aria-label="Next"> 
+                     <span aria-hidden="true">&raquo;</span></a></li>
 				</c:if>
 
 
 				<c:if test = "${(localisationPages + 4) <= maxPage}">
-					<li><a
-						href="ServletDashboard?localisationNext=${localisationNext + 5 }&page=${page}&localisationPages=${localisationPages}" aria-label="Next"> 
-                     <span aria-hidden="true">&raquo;</span></a></li>
+					<li><a href="ServletDashboard?localisationNext=${localisationNext + 5 }&page=${page}&localisationPages=${localisationPages}&filter=${filter}"> 5 next pages </a></li>
 				</c:if>
 
 				<!--               <li> -->
@@ -151,6 +176,10 @@
         </ul>
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
+			
+			<input type="button" class="btn btn-default"
+						onclick="location.href='ServletDashboard?page=1&localisationNext=0'"
+						value="1" />
 
 				<c:if test="${ (maxPage)>=10 }">
 					<input type="button" class="btn btn-default"

@@ -42,7 +42,8 @@ public class ComputerDAO {
 	String queryInfoComputer = "SELECT name, introduced, discontinued, company_id from computer where id=?";
 	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	String queryDeleteComputer = "DELETE from computer WHERE id = ?";
-
+	String queryListComputersFiltered = "SELECT computer.id, computer.name, introduced, discontinued, company.id, company.name FROM computer LEFT JOIN company ON company_id=company.id WHERE computer.name LIKE ? LIMIT ?, ? ";
+	
 	public int countComputers() {
 		int toReturn=0;
 		try (Connection conn = Connect.getInstance().getConnection();){
@@ -57,6 +58,56 @@ public class ComputerDAO {
 			logger.error(e.getMessage());
 		}
 		return toReturn;
+	}
+	
+	
+	public ArrayList<Computer> listComputerFiltered(int page, int numberOfElements, String filter){
+		ArrayList<Computer> listComp = new ArrayList<Computer>();
+		
+		try (Connection conn = Connect.getInstance().getConnection();) {
+	        PreparedStatement pstmt = conn.prepareStatement(queryListComputersFiltered);
+	        pstmt.setInt(2, 10*(page-1));
+	        pstmt.setInt(3, numberOfElements);
+	        pstmt.setString(1, "%"+filter+"%");
+	        System.out.println(pstmt);
+			ResultSet results = pstmt.executeQuery();
+			while (results.next()) {
+				Computer c;
+				ComputerBuilder computerBuilder = new Computer.ComputerBuilder();
+				int id = results.getInt("computer.id");
+				String name = results.getString("computer.name");
+				
+				computerBuilder.withId(id).withName(name);
+				
+				LocalDate introduced;
+				if (results.getDate("introduced") != null) {
+					introduced = results.getDate("introduced").toLocalDate();
+					computerBuilder.withDateIntro(introduced);
+				} else {
+					introduced = null;
+				}
+				LocalDate discontinued;
+				if (results.getDate("discontinued") != null) {
+					discontinued = results.getDate("discontinued").toLocalDate();
+					computerBuilder.withDateDisc(discontinued);
+				} else {
+					discontinued = null;
+				}
+				int companyId = results.getInt("company.id");
+				String companyName = results.getString("company.name");
+				Company company = new Company(companyId, companyName);
+				
+				//on utilise ca ou bien le computer builder
+				//Computer c = new Computer(id, name, introduced, discontinued, company);
+				
+				c = computerBuilder.withCompany(company).build();
+				listComp.add(c);
+			}
+
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+		return listComp;
 	}
 	
 	public ArrayList<Computer> listComputer(int page, int numberOfElements) {
@@ -218,7 +269,6 @@ public class ComputerDAO {
 			}else {
 				pstmt.setNull(4, Types.INTEGER);
 			}
-			System.err.println("id = "+comp.getId()+" name = "+comp.getName());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(e.getMessage());

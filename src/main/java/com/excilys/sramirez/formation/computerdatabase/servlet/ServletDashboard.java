@@ -65,11 +65,26 @@ public class ServletDashboard extends HttpServlet {
         request.setAttribute("page", page);
         ArrayList<ComputerDTO> list = new ArrayList<ComputerDTO>();
         logger.debug("page = "+page);
-        for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.listComputer(x, y)).getListElements()) {
-        	logger.debug(c.toString());
-            list.add(computerMapper.toDTO(c));
+        
+        //faire un test pour savoir si le filtre est null ou pas et quand on passe de null à pas null ou de pas null, on aimerait repasser à la page 1.
+       
+        if(request.getParameter("filter") != null) {	
+        	String filter = request.getParameter("filter");
+        	request.setAttribute("filter", filter);
+        	for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.listComputerFiltered(x, y, filter)).getListElements()) {
+	        	logger.debug(c.toString());
+	            list.add(computerMapper.toDTO(c));
+	        }
+	        request.setAttribute("listComputers", list);
+        }else {
+        
+	        for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.listComputer(x, y)).getListElements()) {
+	        	logger.debug(c.toString());
+	            list.add(computerMapper.toDTO(c));
+	        }
+	        request.setAttribute("listComputers", list);
         }
-        request.setAttribute("listComputers", list);
+        
 
         //pour le next page et le prévious page
         int localisationPages;
@@ -94,7 +109,10 @@ public class ServletDashboard extends HttpServlet {
         request.setAttribute("localisationPages", localisationPages);
         logger.debug("localisationPages = "+ localisationPages);
         logger.debug("localisationNext = "+ localisationNext);
+	        
         
+       
+      
         
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request,  response);
 	}
