@@ -13,10 +13,12 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import main.java.com.excilys.sramirez.formation.computerdatabase.Mapper.ComputerMapper;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer.ComputerBuilder;
 import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
+import main.java.com.excilys.sramirez.formation.computerdatabase.connection.ConnectPoolVersion;
 
 public class ComputerDAO {
 	
@@ -28,6 +30,8 @@ public class ComputerDAO {
 	private final static ComputerDAO instance = new ComputerDAO();
 	
 	CompanyDAO companyDAO = CompanyDAO.getInstance();
+	ComputerMapper computerMapper = ComputerMapper.getInstance();
+	ConnectPoolVersion poolConnect = ConnectPoolVersion.getInstance();
 
 	public static ComputerDAO getInstance() {
 		return instance;
@@ -39,14 +43,15 @@ public class ComputerDAO {
 	//String queryListComputers = "SELECT id, name, introduced, discontinued, company_id FROM computer LIMIT ?, ?";
 	String queryListComputers = "SELECT computer.id, computer.name, introduced, discontinued, company.id, company.name FROM computer LEFT JOIN company ON company_id=company.id LIMIT ?, ?";
 	String queryCreateComputer = "INSERT INTO computer (name, introduced, discontinued, company_id)  VALUES (?, ?, ?, ?)";
-	String queryInfoComputer = "SELECT name, introduced, discontinued, company_id from computer where id=?";
+	String queryInfoComputer = "SELECT computer.id, computer.name, introduced, discontinued, company.id, company.name from computer LEFT JOIN company ON computer.company_id=company.id where computer.id=?";
 	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	String queryDeleteComputer = "DELETE from computer WHERE id = ?";
 	String queryListComputersFiltered = "SELECT computer.id, computer.name, introduced, discontinued, company.id, company.name FROM computer LEFT JOIN company ON company_id=company.id WHERE computer.name LIKE ? LIMIT ?, ? ";
 	
-	public int countComputers() {
+	public int count() {
 		int toReturn=0;
-		try (Connection conn = Connect.getInstance().getConnection();){
+		//try (Connection conn = Connect.getInstance().getConnection();){
+		try(Connection conn = poolConnect.openConnection();){
 	        PreparedStatement pstmt = conn.prepareStatement(queryCountComputers);
 	        ResultSet result = pstmt.executeQuery();
 	        while (result.next()) {
@@ -61,47 +66,18 @@ public class ComputerDAO {
 	}
 	
 	
-	public ArrayList<Computer> listComputerFiltered(int page, int numberOfElements, String filter){
+	public ArrayList<Computer> listFiltered(int page, int numberOfElements, String filter){
 		ArrayList<Computer> listComp = new ArrayList<Computer>();
 		
-		try (Connection conn = Connect.getInstance().getConnection();) {
+		//try (Connection conn = Connect.getInstance().getConnection();) {
+		try(Connection conn = poolConnect.openConnection();){
 	        PreparedStatement pstmt = conn.prepareStatement(queryListComputersFiltered);
 	        pstmt.setInt(2, 10*(page-1));
 	        pstmt.setInt(3, numberOfElements);
 	        pstmt.setString(1, "%"+filter+"%");
-	        System.out.println(pstmt);
 			ResultSet results = pstmt.executeQuery();
 			while (results.next()) {
-				Computer c;
-				ComputerBuilder computerBuilder = new Computer.ComputerBuilder();
-				int id = results.getInt("computer.id");
-				String name = results.getString("computer.name");
-				
-				computerBuilder.withId(id).withName(name);
-				
-				LocalDate introduced;
-				if (results.getDate("introduced") != null) {
-					introduced = results.getDate("introduced").toLocalDate();
-					computerBuilder.withDateIntro(introduced);
-				} else {
-					introduced = null;
-				}
-				LocalDate discontinued;
-				if (results.getDate("discontinued") != null) {
-					discontinued = results.getDate("discontinued").toLocalDate();
-					computerBuilder.withDateDisc(discontinued);
-				} else {
-					discontinued = null;
-				}
-				int companyId = results.getInt("company.id");
-				String companyName = results.getString("company.name");
-				Company company = new Company(companyId, companyName);
-				
-				//on utilise ca ou bien le computer builder
-				//Computer c = new Computer(id, name, introduced, discontinued, company);
-				
-				c = computerBuilder.withCompany(company).build();
-				listComp.add(c);
+				listComp.add(computerMapper.fromResultSetToModel(results));
 			}
 
 		} catch (SQLException e) {
@@ -110,45 +86,17 @@ public class ComputerDAO {
 		return listComp;
 	}
 	
-	public ArrayList<Computer> listComputer(int page, int numberOfElements) {
+	public ArrayList<Computer> list(int page, int numberOfElements) {
 		ArrayList<Computer> listComp = new ArrayList<Computer>();
 		
-		try (Connection conn = Connect.getInstance().getConnection();) {
+		//try (Connection conn = Connect.getInstance().getConnection();) {
+		try(Connection conn = poolConnect.openConnection();){
 	        PreparedStatement pstmt = conn.prepareStatement(queryListComputers);
 	        pstmt.setInt(1, 10*(page-1));
 	        pstmt.setInt(2, numberOfElements);
 			ResultSet results = pstmt.executeQuery();
 			while (results.next()) {
-				Computer c;
-				ComputerBuilder computerBuilder = new Computer.ComputerBuilder();
-				int id = results.getInt("computer.id");
-				String name = results.getString("computer.name");
-				
-				computerBuilder.withId(id).withName(name);
-				
-				LocalDate introduced;
-				if (results.getDate("introduced") != null) {
-					introduced = results.getDate("introduced").toLocalDate();
-					computerBuilder.withDateIntro(introduced);
-				} else {
-					introduced = null;
-				}
-				LocalDate discontinued;
-				if (results.getDate("discontinued") != null) {
-					discontinued = results.getDate("discontinued").toLocalDate();
-					computerBuilder.withDateDisc(discontinued);
-				} else {
-					discontinued = null;
-				}
-				int companyId = results.getInt("company.id");
-				String companyName = results.getString("company.name");
-				Company company = new Company(companyId, companyName);
-				
-				//on utilise ca ou bien le computer builder
-				//Computer c = new Computer(id, name, introduced, discontinued, company);
-				
-				c = computerBuilder.withCompany(company).build();
-				listComp.add(c);
+				listComp.add(computerMapper.fromResultSetToModel(results));
 			}
 
 		} catch (SQLException e) {
@@ -159,9 +107,10 @@ public class ComputerDAO {
 	//j'ai du effacer un bout sans faire expres...
 	//if (results.getDate("discontinued") != null) {
 
-	public void createComputer(Computer comp) {
+	public void create(Computer comp) {
 
-		try (Connection conn = Connect.getInstance().getConnection();){
+		//try (Connection conn = Connect.getInstance().getConnection();){
+		try(Connection conn = poolConnect.openConnection();){
 	        PreparedStatement pstmt = conn.prepareStatement(queryCreateComputer);
 	        
 	        pstmt.setString(1, comp.getName());
@@ -189,45 +138,47 @@ public class ComputerDAO {
 	}
 
 	
-	public Optional<Computer> infoComp(int id) {
+	public Optional<Computer> info(int id) {
 		
 		Computer comp = new Computer();
 		int company_id=0;
 		ComputerBuilder cpBuild = new ComputerBuilder();
 
-		try (Connection conn = Connect.getInstance().getConnection();){
+		//try (Connection conn = Connect.getInstance().getConnection();){
+		try(Connection conn = poolConnect.openConnection();){
 			PreparedStatement pstmt;
 
 			pstmt =  conn.prepareStatement(queryInfoComputer);
 			if(id!=0) {
 				pstmt.setInt(1, id);
-			}else {
-				System.out.println("que fait-on?");
+//				cpBuild.withId(id);
 			}
 			ResultSet results = pstmt.executeQuery();
 			if (results.next()) {
 
-				String name = results.getString("name");
-				cpBuild.withName(name);
-				LocalDate introduced;
-				if (results.getDate("introduced") != null) {
-					introduced = results.getDate("introduced").toLocalDate();
-					cpBuild.withDateIntro(introduced);
-				} else {
-					introduced = null;
-				}
-				LocalDate discontinued;
-				if (results.getDate("discontinued") != null) {
-					discontinued = results.getDate("discontinued").toLocalDate();
-					cpBuild.withDateDisc(discontinued);
-				} else {
-					discontinued = null;
-				}
-				company_id = results.getInt("company_id");
-
-				//PROBLEME CONSTRUCTEUR
+//				String name = results.getString("name");
+//				cpBuild.withName(name);
+//				LocalDate introduced;
+//				if (results.getDate("introduced") != null) {
+//					introduced = results.getDate("introduced").toLocalDate();
+//					cpBuild.withDateIntro(introduced);
+//				} else {
+//					introduced = null;
+//				}
+//				LocalDate discontinued;
+//				if (results.getDate("discontinued") != null) {
+//					discontinued = results.getDate("discontinued").toLocalDate();
+//					cpBuild.withDateDisc(discontinued);
+//				} else {
+//					discontinued = null;
+//				}
+//				company_id = results.getInt("company_id");
+//
+//				//PROBLEME CONSTRUCTEUR
+//				
+//				comp = cpBuild.build();
 				
-				comp = cpBuild.build();
+				comp = computerMapper.fromResultSetToModel(results);
 			} else {
 				comp = new Computer();
 			}
@@ -235,17 +186,18 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
 		}
-		String companyName = companyDAO.getCompanyName(company_id);
-		comp.setCompany(new Company(company_id, companyName));
+		//String companyName = companyDAO.getName(company_id);
+		//comp.setCompany(new Company(company_id, companyName));
 		return Optional.ofNullable(comp);
 	}
 
 
 	
 	//Ne serais-ce pas bien de signaler à l'utilisateur que l'ordi à modifier n'existe pas dans le cas ou l'id ne correspond à aucun computer?
-	public Computer updateComp(Computer comp) {
+	public Computer update(Computer comp) {
 		
-		try(Connection conn = Connect.getInstance().getConnection();) {
+		//try(Connection conn = Connect.getInstance().getConnection();) {
+		try(Connection conn = poolConnect.openConnection();){
 			PreparedStatement pstmt;
 			pstmt = (PreparedStatement) conn.prepareStatement(queryUpdateComputer);
 			pstmt.setInt(5, comp.getId());
@@ -279,9 +231,10 @@ public class ComputerDAO {
 	
 	
 	//ca serait pas mal de dire à l'utilisateur si rien n'a ete effacé
-	public void deleteComp(int id) {
+	public void delete(int id) {
 		
-		try (Connection conn = Connect.getInstance().getConnection();){
+		//try (Connection conn = Connect.getInstance().getConnection();){
+		try(Connection conn = poolConnect.openConnection();){
 			PreparedStatement pstmt;
 			pstmt = conn.prepareStatement(queryDeleteComputer);
 			pstmt.setInt(1, id);

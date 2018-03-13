@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
+import main.java.com.excilys.sramirez.formation.computerdatabase.connection.ConnectPoolVersion;
 
 public class CompanyDAO {
 	
@@ -26,14 +27,17 @@ public class CompanyDAO {
 	private CompanyDAO() {
 	}
 	
+	ConnectPoolVersion poolConnect = ConnectPoolVersion.getInstance();
+	
 	String queryListCompanyFull = "select id, name from company";
 	String queryListCompany = "select id, name from company LIMIT ?, ?";
 	String queryNameCompany = "SELECT name from company WHERE id = ?";
 
 
-	public ArrayList<Company> listCompany(int page, int numberOfElements) {
+	public ArrayList<Company> list(int page, int numberOfElements) {
 		ArrayList<Company> listComp = new ArrayList<Company>();		
-		try (Connection conn =  Connect.getInstance().getConnection();) {
+		//try (Connection conn =  Connect.getInstance().getConnection();) {
+		try(Connection conn = poolConnect.openConnection();){
 			PreparedStatement pstmt;
 			pstmt = (PreparedStatement) conn.prepareStatement(queryListCompany);
 			pstmt.setInt(1, 10*(page-1));
@@ -56,9 +60,10 @@ public class CompanyDAO {
 		return listComp;
 	}
 	
-	public ArrayList<Company> listCompany() {
+	public ArrayList<Company> list() {
 		ArrayList<Company> listComp = new ArrayList<Company>();		
-		try (Connection conn =  Connect.getInstance().getConnection();) {
+		//try (Connection conn =  Connect.getInstance().getConnection();) {
+		try(Connection conn = poolConnect.openConnection();){
 			PreparedStatement pstmt;
 			pstmt = (PreparedStatement) conn.prepareStatement(queryListCompanyFull);
 
@@ -79,9 +84,10 @@ public class CompanyDAO {
 		return listComp;
 	}
 
-	public String getCompanyName(int companyId) {
+	public String getName(int companyId) {
 		String name = "";
-		try (Connection conn =  Connect.getInstance().getConnection();) {
+		//try (Connection conn =  Connect.getInstance().getConnection();) {
+		try(Connection conn = poolConnect.openConnection();){
 			PreparedStatement pstmt;
 			pstmt = (PreparedStatement) conn.prepareStatement(queryNameCompany);
 			pstmt.setInt(1, companyId);

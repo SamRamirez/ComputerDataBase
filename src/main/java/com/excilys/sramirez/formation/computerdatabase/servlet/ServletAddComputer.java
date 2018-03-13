@@ -37,8 +37,7 @@ public class ServletAddComputer extends HttpServlet {
 		
 		ArrayList<CompanyDTO> listCompanyDTO = new ArrayList<CompanyDTO>();
 
-        for ( Company c : companyService.listCompany() ) {
-        	logger.debug(c.toString());
+        for ( Company c : companyService.list() ) {
             listCompanyDTO.add(companyMapper.toDTO(c));
         }
         request.setAttribute("listCompany", listCompanyDTO);
@@ -65,7 +64,7 @@ public class ServletAddComputer extends HttpServlet {
 		String companyName = "";
 		if(request.getParameter("companyId") != null) {
 			companyId = Integer.parseInt( request.getParameter("companyId") );
-			companyName = companyService.getCompanyName(companyId);
+			companyName = companyService.getName(companyId);
 			compuDTO.setCompanyId(companyId);
 			compuDTO.setCompanyName(companyName);
 		}	
@@ -74,7 +73,7 @@ public class ServletAddComputer extends HttpServlet {
 		Computer c = computerMapper.fromDTO(compuDTO);
 		
 		//changer le service pour que si certains atributs du computer sont à null, ca marche quand meme (on va passer un computer directement en parametre du service et on gere les null autre part)
-		computerService.createComputer(c.getName(), c.getIntroduced(), c.getDiscontinued(), c.getCompany());
+		computerService.create(c.getName(), c.getIntroduced(), c.getDiscontinued(), c.getCompany());
 		
 		
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(request,  response);

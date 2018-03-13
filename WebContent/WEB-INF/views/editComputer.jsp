@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <div class="label label-default pull-right">
-                        id: ${id }
+                        id: ${compuReferentDTO.id}
                     </div>
                     <h1>Edit Computer</h1>
 
@@ -31,25 +31,27 @@
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" placeholder="Computer name" name="computerName">
+                                <input type="text" class="form-control" id="computerName" placeholder="Computer name" value="${compuReferentDTO.name}" name="computerName">
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" placeholder="Introduced date" name="introduced">
+                                <input type="date" class="form-control" id="introduced" placeholder="Introduced date" value="${compuReferentDTO.introduced}" name="introduced">
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" placeholder="Discontinued date" name="discontinued">
+                                <input type="date" class="form-control" id="discontinued" placeholder="Discontinued date" value="${compuReferentDTO.discontinued}" name="discontinued">
                             </div>
                             
                             <div class="form-group">
                                 <label for="companyId">Company</label> 
-                                <select class="form-control" name= "companyId" id="companyId">
+                                <select class="form-control"  name= "companyId" id="companyId">
+									<option selected=selected value="${compuReferentDTO.companyId}">${compuReferentDTO.companyName}</option>	
 									<c:forEach items="${listCompany}" var="entry">
-										<option value = "${entry.id}" selected = "${entry.id} ">${entry.name} </option>
+										<option value = "${entry.id}" >${entry.name} </option>
 									</c:forEach>
 								</select>
 							</div>  
+<%-- 							"${compuReferentDTO.companyId}" --%>
                                      
                         </fieldset>
                         <div class="actions pull-right">

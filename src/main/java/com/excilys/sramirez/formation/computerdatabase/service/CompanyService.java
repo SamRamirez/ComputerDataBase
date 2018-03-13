@@ -20,16 +20,16 @@ private final static CompanyService instance = new CompanyService();
 
 	CompanyDAO companyDAO= CompanyDAO.getInstance();
 	
-	public ArrayList<Company> listCompany(int page, int numberOfElements) {
-		return companyDAO.listCompany(page, numberOfElements);
+	public ArrayList<Company> list(int page, int numberOfElements) {
+		return companyDAO.list(page, numberOfElements);
 	}
 	
-	public ArrayList<Company> listCompany() {
-		return companyDAO.listCompany();
+	public ArrayList<Company> list() {
+		return companyDAO.list();
 	}
 
-	public String getCompanyName(int companyId) {
-		String toReturn = companyDAO.getCompanyName(companyId);
+	public String getName(int companyId) {
+		String toReturn = companyDAO.getName(companyId);
 		return toReturn;
 	}
 

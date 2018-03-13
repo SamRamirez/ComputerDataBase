@@ -34,11 +34,13 @@ public class ServletEditComputer extends HttpServlet {
 	
 		int idCompu = Integer.parseInt( request.getParameter("id") );
 		request.setAttribute("id", idCompu);
+		Computer compuReferent = computerService.returnComp(idCompu);
+		ComputerDTO compuReferentDTO = computerMapper.toDTO(compuReferent);
+		request.setAttribute("compuReferentDTO", compuReferentDTO);
 		
 		ArrayList<CompanyDTO> listCompanyDTO = new ArrayList<CompanyDTO>();
 
-        for ( Company c : companyService.listCompany() ) {
-        	logger.debug(c.toString());
+        for ( Company c : companyService.list() ) {
             listCompanyDTO.add(companyMapper.toDTO(c));
         }
         request.setAttribute("listCompany", listCompanyDTO);
@@ -53,8 +55,6 @@ public class ServletEditComputer extends HttpServlet {
 		int idCompu = Integer.parseInt( request.getParameter("id") );
 		request.setAttribute("id", idCompu);
 		
-		Computer compuReferent = computerService.infoComp(idCompu);
-		
 		ComputerDTO compuDTO = new ComputerDTO();
 		String name = request.getParameter("computerName");
 		String introduced = request.getParameter("introduced");
@@ -67,14 +67,15 @@ public class ServletEditComputer extends HttpServlet {
 		String companyName = "";
 		if(request.getParameter("companyId") != null) {
 			companyId = Integer.parseInt( request.getParameter("companyId") );
-			companyName = companyService.getCompanyName(companyId);
+			companyName = companyService.getName(companyId);
 			compuDTO.setCompanyId(companyId);
 			compuDTO.setCompanyName(companyName);
 		}	
 
 		Computer computerUpdated = computerMapper.fromDTO(compuDTO);
-		Computer c = computerService.complete(compuReferent, computerUpdated);
-		computerService.updateComp(idCompu, c.getName(), c.getIntroduced(), c.getDiscontinued(), c.getCompany());
+		computerUpdated.setId(idCompu);
+		
+		computerService.update(computerUpdated);
 		
 		
 		response.sendRedirect("ServletDashboard");

@@ -26,19 +26,19 @@ public class ComputerService {
 
 	ComputerDAO compDAO = ComputerDAO.getInstance();
 	
-	public int countComputers() {
-		return compDAO.countComputers();
+	public int count() {
+		return compDAO.count();
 	}
 	
-	public ArrayList<Computer> listComputer(int page, int numberOfElements) {
-		return compDAO.listComputer(page, numberOfElements);
+	public ArrayList<Computer> list(int page, int numberOfElements) {
+		return compDAO.list(page, numberOfElements);
 	}
 	
-	public ArrayList<Computer> listComputerFiltered(int page, int numberOfElements, String filter){
-		return compDAO.listComputerFiltered(page, numberOfElements, filter);
+	public ArrayList<Computer> listFiltered(int page, int numberOfElements, String filter){
+		return compDAO.listFiltered(page, numberOfElements, filter);
 	}
 	
-	public Computer createComputer(String name, LocalDate introduced, LocalDate discontinued, Company company) {
+	public Computer create(String name, LocalDate introduced, LocalDate discontinued, Company company) {
 		Computer comp;
 		ComputerBuilder computerBuilder = new Computer.ComputerBuilder();
 		
@@ -57,70 +57,31 @@ public class ComputerService {
 		}
 		comp = computerBuilder.build();
 		
-		compDAO.createComputer(comp);			
+		compDAO.create(comp);			
 		return comp;
 	}
 	
-	public Computer infoComp(int id) {
-		Computer toReturn = compDAO.infoComp(id).orElse(new Computer());
+	public Computer info(int id) {
+		Computer toReturn = compDAO.info(id).orElse(new Computer());
+		//je vais pas enlever le sysout puisque la methode sert à afficher les détails du computer 
 		System.out.println(toReturn.toString());
 		return toReturn;		
 	}
 	
 	public Computer returnComp(int id) {
-		Computer toReturn = compDAO.infoComp(id).orElse(new Computer());
+		Computer toReturn = compDAO.info(id).orElse(new Computer());
 		return toReturn;		
 	}
 	
-	public Computer updateComp(int id, String name, LocalDate introduced, LocalDate discontinued, Company company) {
-		Computer comp;		
-		comp = new Computer(id, name, introduced, discontinued, company); 
-		compDAO.updateComp(comp);
+	public Computer update(Computer comp) {
+		compDAO.update(comp);
 		return comp;		
 	}
 	
-	public void deleteComp(int id) {
+	public void delete(int id) {
 		//passer en parametre de delete un computer plutot qu'un id?  ca sert? ca sert à retourner l'ordi effacé sans refaire de requete?	
-		compDAO.deleteComp(id);
+		compDAO.delete(id);
 	}
-	
-	//c1 est le computer de référence et c2 est l'update à apporter
-	public Computer complete(Computer c1, Computer c2) {
-		Computer c3 = new Computer();
-		ComputerBuilder compBuilder = new ComputerBuilder();
-		if(c2.getName()  != null && c2.getName()  != "" && c2.getName() != "default") {
-			compBuilder.withName(c2.getName());
-		}else if (c1.getName() != null && c1.getName() != "" && c1.getName() != "default") {
-			compBuilder.withName(c1.getName());
-		}
-		
-		if(c2.getIntroduced()  != null) {
-			compBuilder.withDateIntro(c2.getIntroduced());
-		}else if (c1.getIntroduced() != null) {
-			compBuilder.withDateIntro(c1.getIntroduced());
-		}
-		
-		if(c2.getDiscontinued()  != null) {
-			compBuilder.withDateDisc(c2.getDiscontinued());
-		}else if (c1.getDiscontinued() != null) {
-			compBuilder.withDateDisc(c1.getDiscontinued());
-		}
-		
-		if(c2.getCompany()  != null) {
-			compBuilder.withCompany(c2.getCompany());
-		}else if (c1.getCompany() != null) {
-			compBuilder.withCompany(c1.getCompany());
-		}
-		c3=compBuilder.build();
-		
-//		if(c2.  != null) {
-//			compBuilder.with (c2.);
-//		}else if (c1. != null) {
-//			compBuilder.with (c1.);
-//		}
-		
-		
-		return c3;
-	}
+
 
 }

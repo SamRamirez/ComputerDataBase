@@ -26,8 +26,29 @@ public class ServletDashboard extends HttpServlet {
 	
 	static ComputerService computerService = ComputerService.getInstance();
 	static ComputerMapper computerMapper = ComputerMapper.getInstance();
+	int firstPage = 1;
+	int nbEltsPerPage =  10;
+	int firstLocalisationPages = 1;
+	int nbAcessiblePages = 5;
 
 
+	public void listComputersFilterOrNot(HttpServletRequest request, int page){
+		 ArrayList<ComputerDTO> list = new ArrayList<ComputerDTO>();
+		if(request.getParameter("filter") != null) {	
+	    	String filter = request.getParameter("filter");
+	    	request.setAttribute("filter", filter);
+	    	for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.listFiltered(x, y, filter)).getListElements()) {
+	            list.add(computerMapper.toDTO(c));
+	        }
+	        request.setAttribute("listComputers", list);
+	    }else {
+	        for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.list(x, y)).getListElements()) {
+	            list.add(computerMapper.toDTO(c));
+	        }
+	        request.setAttribute("listComputers", list);
+	    }
+	}	
+	
 	/**
 	 * @throws IOException 
 	 * @throws ServletException 
@@ -35,14 +56,10 @@ public class ServletDashboard extends HttpServlet {
 	 * @response reponse.
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int firstPage = 1;
-		int nbEltsPerPage =  10;
-		int firstLocalisationPages = 1;
-		int nbAcessiblePages = 5;
 		request.setAttribute("nbAcessiblePages", nbAcessiblePages);
 		
 		//le nombre de computers et de pages
-		int nbCompu = computerService.countComputers();
+		int nbCompu = computerService.count();
 		int maxPage;
 		if(nbCompu % nbEltsPerPage != 0) {
 			maxPage = (nbCompu / nbEltsPerPage) + 1;
@@ -56,63 +73,29 @@ public class ServletDashboard extends HttpServlet {
 		int page;
 		if (request.getParameter("page") != null) {
             page = Integer.valueOf(request.getParameter("page"));
-            logger.debug("PAGE");
-            logger.debug("page if = "+page);
         } else {
             page = firstPage;
-            logger.debug("PAS PAGE");
         }
         request.setAttribute("page", page);
-        ArrayList<ComputerDTO> list = new ArrayList<ComputerDTO>();
-        logger.debug("page = "+page);
-        
-        //faire un test pour savoir si le filtre est null ou pas et quand on passe de null à pas null ou de pas null, on aimerait repasser à la page 1.
-       
-        if(request.getParameter("filter") != null) {	
-        	String filter = request.getParameter("filter");
-        	request.setAttribute("filter", filter);
-        	for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.listComputerFiltered(x, y, filter)).getListElements()) {
-	        	logger.debug(c.toString());
-	            list.add(computerMapper.toDTO(c));
-	        }
-	        request.setAttribute("listComputers", list);
-        }else {
-        
-	        for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.listComputer(x, y)).getListElements()) {
-	        	logger.debug(c.toString());
-	            list.add(computerMapper.toDTO(c));
-	        }
-	        request.setAttribute("listComputers", list);
-        }
-        
+        listComputersFilterOrNot(request, page);
 
         //pour le next page et le prévious page
         int localisationPages;
-        int localisationNext;
+        int localisationNext = 0;
         
         if (request.getParameter("localisationNext") != null ) {
         	localisationNext = Integer.valueOf(request.getParameter("localisationNext"));
-        	logger.debug("localisation next = "+localisationNext);
-        } else {
-        	localisationNext=0;
-        	logger.debug("pas localisation next");
-        }
+        } 
         request.setAttribute("localisationNext", localisationNext);
 
         if (request.getParameter("localicationPages") != null ) {
         	localisationPages = Integer.valueOf(request.getParameter("localisationPages"));
-        	logger.debug("localisation page = "+localisationPages);
         } else {
         	localisationPages = firstLocalisationPages;
         }
         localisationPages+=localisationNext;
         request.setAttribute("localisationPages", localisationPages);
-        logger.debug("localisationPages = "+ localisationPages);
-        logger.debug("localisationNext = "+ localisationNext);
-	        
-        
-       
-      
+
         
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request,  response);
 	}
@@ -121,14 +104,12 @@ public class ServletDashboard extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			String selection = (String) request.getParameter("selection");
 
-			logger.debug(selection);
-
 			if (selection != null) {
 				String[] toDeleteList = selection.split(",");
 
 				for (String toDelete : toDeleteList) {
 					int id = Integer.parseInt(toDelete);
-					computerService.deleteComp(id);
+					computerService.delete(id);
 				}
 			}
 			

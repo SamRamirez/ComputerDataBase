@@ -40,7 +40,7 @@ public class CommandLines {
 			switch (Command.fromNameToEnum(entryParsed)) {
 
 			case COUNT_COMPUTER :
-				int isItAnInteger = computerService.countComputers();
+				int isItAnInteger = computerService.count();
 				System.out.println(isItAnInteger);
 				break;
 			case LIST_COMPUTERS : 
@@ -50,8 +50,8 @@ public class CommandLines {
 					pageComputerNumber = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				}
 				//ICI DRAPEAU
-				Page pageComputer = new Page(numberOfComputers, pageComputerNumber, (x,y) -> computerService.listComputer(x, y));
-				pageComputer.setListElements( computerService.listComputer(pageComputerNumber, numberOfComputers) );
+				Page pageComputer = new Page(numberOfComputers, pageComputerNumber, (x,y) -> computerService.list(x, y));
+				pageComputer.setListElements( computerService.list(pageComputerNumber, numberOfComputers) );
 				for(int i =0; i<pageComputer.getNumberOfElements(); i++) {
 					System.out.print(((Computer) pageComputer.getListElements().get(i)).getId());
 					System.out.print(((Computer) pageComputer.getListElements().get(i)).getName());
@@ -67,8 +67,8 @@ public class CommandLines {
 					pageCompanyNumber = Integer.parseInt(entry.substring(entry.indexOf("(")+1, entry.indexOf(")")));
 				}
 				//ICI DRAPEAU
-				Page pageCompany = new Page(numberOfCompanies, pageCompanyNumber, (x,y) -> companyService.listCompany(x, y));
-				pageCompany.setListElements(companyService.listCompany(pageCompanyNumber, numberOfCompanies));
+				Page pageCompany = new Page(numberOfCompanies, pageCompanyNumber, (x,y) -> companyService.list(x, y));
+				pageCompany.setListElements(companyService.list(pageCompanyNumber, numberOfCompanies));
 				for(int i =0; i<pageCompany.getNumberOfElements(); i++) {
 					System.out.print(((Company) pageCompany.getListElements().get(i)).getId());
 					System.out.print(" "+((Company) pageCompany.getListElements().get(i)).getName());					
@@ -91,7 +91,7 @@ public class CommandLines {
 				if (  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")) != "") ||  (entry.substring(entry.indexOf("(")+1, entry.indexOf(")")) != " ") ) {
 					if (entry.indexOf(",")==-1) {
 						name=entry.substring(entry.indexOf("(")+1, entry.indexOf(")"));
-						computerService.createComputer(name, null, null, /*new Company(0, companyService.getCompanyName(0))*/ new Company() );
+						computerService.create(name, null, null, /*new Company(0, companyService.getCompanyName(0))*/ new Company() );
 					//4, 3 ou 2 args	
 					}else {
 						int indexVirgule1=entry.indexOf(",");
@@ -104,14 +104,14 @@ public class CommandLines {
 							//2 args
 							if(indexVirgule2==indexVirgule1) {
 								company_id = Integer.parseInt(entry.substring(indexVirgule1+2, entry.length()-1));
-								computerService.createComputer(name, null, null, new Company(company_id,companyService.getCompanyName(company_id)));
+								computerService.create(name, null, null, new Company(company_id,companyService.getName(company_id)));
 							} else {
 								//traitement pour 3 arguments
 								try {
 									introduced = LocalDate.parse(entry.substring(indexVirgule1+2, indexVirgule2));
 									discontinued=null;
 									company_id = Integer.parseInt(entry.substring(indexVirgule2+2, entry.length()-1));
-									computerService.createComputer(name, introduced, discontinued, new Company(company_id,companyService.getCompanyName(company_id)));
+									computerService.create(name, introduced, discontinued, new Company(company_id,companyService.getName(company_id)));
 								}catch(Exception e){
 									System.out.println("entree non valide");
 								}	
@@ -122,7 +122,7 @@ public class CommandLines {
 					        introduced = LocalDate.parse(entry.substring(indexVirgule1+2, indexVirgule2));
 							discontinued = LocalDate.parse(entry.substring(indexVirgule2+2, indexVirgule3));
 							company_id = Integer.parseInt(entry.substring(indexVirgule3+2, entry.length()-1));
-							computerService.createComputer(name, introduced, discontinued, new Company(company_id,companyService.getCompanyName(company_id)));
+							computerService.create(name, introduced, discontinued, new Company(company_id,companyService.getName(company_id)));
 						}	
 					}
 				}	
@@ -149,13 +149,13 @@ public class CommandLines {
 					switch(listePositionsVirgules.size()-1){
 						case 1 : 
 							name=entry.substring(listePositionsVirgules.get(1)+1, entry.length()-1);
-							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), computerReferant.getCompany());
+							computerService.update(new Computer(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), computerReferant.getCompany()) );
 						break;
 						case 2 :
 							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
 							company_id=Integer.parseInt(entry.substring(listePositionsVirgules.get(2)+1, entry.length()-1));
-							String companyName = companyService.getCompanyName(company_id); 
-							computerService.updateComp(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), new Company(company_id, companyName));
+							String companyName = companyService.getName(company_id); 
+							computerService.update(new Computer(id, name, computerReferant.getIntroduced(), computerReferant.getDiscontinued(), new Company(company_id, companyName)) );
 						break;
 						case 3 : 
 							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
@@ -169,7 +169,7 @@ public class CommandLines {
 							}else {
 								discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, entry.length()-1));
 							}	
-							computerService.updateComp(id, name, introduced, discontinued, computerReferant.getCompany());
+							computerService.update(new Computer(id, name, introduced, discontinued, computerReferant.getCompany()) );
 						break;
 						case 4 : 
 							name=entry.substring(listePositionsVirgules.get(1)+1, listePositionsVirgules.get(2)-1);
@@ -184,8 +184,8 @@ public class CommandLines {
 								discontinued=LocalDate.parse(entry.substring(listePositionsVirgules.get(3)+1, listePositionsVirgules.get(4)-1));
 							}	
 							company_id=Integer.parseInt( entry.substring(listePositionsVirgules.get(4)+1, entry.length()-1) );
-							companyName = companyService.getCompanyName(company_id);
-							computerService.updateComp(id, name, introduced, discontinued, new Company(company_id, companyName) );
+							companyName = companyService.getName(company_id);
+							computerService.update(new Computer(id, name, introduced, discontinued, new Company(company_id, companyName)) );
 						break;
 						default :
 							System.out.println("nous ne verrons jamais ce message");
@@ -194,11 +194,11 @@ public class CommandLines {
 				break;
 			case DELETE_COMPUTER :	
 				id = Integer.parseInt(entry.substring(entry.indexOf("(") + 1, entry.indexOf(")")));
-				computerService.deleteComp(id);
+				computerService.delete(id);
 				break;
 			case INFO_COMPUTER :
 				id = Integer.parseInt(entry.substring(entry.indexOf("(") + 1, entry.indexOf(")")));
-				computerService.infoComp(id);
+				computerService.info(id);
 				break;
 			default :
 				System.out.println("fonction non reconnue");

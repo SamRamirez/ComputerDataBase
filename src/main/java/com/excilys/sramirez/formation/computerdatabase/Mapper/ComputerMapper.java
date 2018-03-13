@@ -1,6 +1,8 @@
 package main.java.com.excilys.sramirez.formation.computerdatabase.Mapper;
 
 import java.lang.reflect.Field;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -26,29 +28,42 @@ private final static ComputerMapper instance = new ComputerMapper();
 //	ComputerService computerService = ComputerService.getInstance();
 //	CompanyService companyService =  CompanyService.getInstance();
 	
-	
-	
-//	Field[] attributs = Computer.class.getFields();
-//	//int nbAttributes = attributs.length;
-//	for(Field attribut : attributs) {
-//		attribut.setAccessible(true);
-//		Object attributVrai;
-//		try {
-//			attributVrai = attribut.get(computer);
-//			if(attributVrai!=null) {
-//				Field fieldDTO = ComputerDTO.class.getField(attribut.getName());
-//				if(fieldDTO.getType().equals(attribut.getType())){
-//					fieldDTO.set(computerDTO, attributVrai);
-//				}
-//			}else {
-//				
-//			}
-//		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-//			e.printStackTrace();
-//		}
-//	}
-	
 
+	public Computer fromResultSetToModel(ResultSet results) throws SQLException {
+		Computer toReturn = new Computer();
+		ComputerBuilder computerBuilder = new ComputerBuilder();
+		int id;
+		if ( results.getInt("computer.id") != 0 ) {
+			id = results.getInt("computer.id");
+			computerBuilder.withId(id);
+		}
+		String name = "";
+		if(results.getString("computer.name") != "") {
+			name = results.getString("computer.name");
+			computerBuilder.withName(name);
+		}
+		LocalDate introduced;
+		if (results.getDate("introduced") != null) {
+			introduced = results.getDate("introduced").toLocalDate();
+			computerBuilder.withDateIntro(introduced);
+		} else {
+			introduced = null;
+		}
+		LocalDate discontinued;
+		if (results.getDate("discontinued") != null) {
+			discontinued = results.getDate("discontinued").toLocalDate();
+			computerBuilder.withDateDisc(discontinued);
+		} else {
+			discontinued = null;
+		}
+		int companyId = results.getInt("company.id");
+		String companyName = results.getString("company.name");
+		Company company = new Company(companyId, companyName);
+		toReturn = computerBuilder.withCompany(company).build();
+		return toReturn;
+	}
+	
+	
 	public ComputerDTO toDTO(Computer computer) {
 		ComputerDTO computerDTO = new ComputerDTO();
 		computerDTO.setId(computer.getId());
@@ -59,7 +74,6 @@ private final static ComputerMapper instance = new ComputerMapper();
 		computerDTO.setCompanyName(computer.getCompany().getName());
 		return computerDTO;
 	}
-	
 	
 	//extends ElementDTO
 	public ArrayList<ComputerDTO> toDTO(ArrayList<Computer> listComputers){

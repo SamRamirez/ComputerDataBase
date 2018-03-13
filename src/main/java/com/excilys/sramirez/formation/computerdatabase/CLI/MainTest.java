@@ -15,7 +15,7 @@ public class MainTest {
 		ComputerService compService= ComputerService.getInstance();
 	
 		
-		ArrayList<Computer> listComp = compService.listComputer(1, 10);
+		ArrayList<Computer> listComp = compService.list(1, 10);
 		for(int i =0; i<listComp.size(); i++) {
 			System.out.print(listComp.get(i).getId());
 			System.out.print(" "+listComp.get(i).getName());
@@ -26,7 +26,7 @@ public class MainTest {
 
 		
 		
-		compService.createComputer("Abc", LocalDate.of(2000, 5, 26), null, new Company());
+		compService.create("Abc", LocalDate.of(2000, 5, 26), null, new Company());
 		
 		
 		
