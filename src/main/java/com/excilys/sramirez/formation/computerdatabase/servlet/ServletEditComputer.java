@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.CompanyDTO;
 import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.ComputerDTO;
@@ -28,7 +29,11 @@ public class ServletEditComputer extends HttpServlet {
 	static CompanyService companyService = CompanyService.getInstance();
 	static CompanyMapper companyMapper = CompanyMapper.getInstance();
 	static ComputerMapper computerMapper = ComputerMapper.getInstance();
-	static ComputerService computerService = ComputerService.getInstance();
+	
+	@Autowired
+	static ComputerService computerService;
+	
+	//= ComputerService.getInstance();
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
@@ -81,5 +86,16 @@ public class ServletEditComputer extends HttpServlet {
 		response.sendRedirect("ServletDashboard");
 		//this.getServletContext().getRequestDispatcher("/WEB-INF/views/editComputer.jsp").forward(request,  response);
 	}
+	
+//	@Override
+//	public void init(ServletConfig config) throws ServletException {
+//		super.init(config);
+//		ServletContext servletContext = config.getServletContext();
+//		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+//	    AutowireCapableBeanFactory autowireCapableBeanFactory = webApplicationContext.getAutowireCapableBeanFactory();
+//	    autowireCapableBeanFactory.autowireBean(this);
+//	}
+
+
 
 }

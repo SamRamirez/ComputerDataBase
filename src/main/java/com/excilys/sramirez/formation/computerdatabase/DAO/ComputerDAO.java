@@ -6,36 +6,45 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.Mapper.ComputerMapper;
-import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer.ComputerBuilder;
-import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
 import main.java.com.excilys.sramirez.formation.computerdatabase.connection.ConnectPoolVersion;
 
+
+@Repository
 public class ComputerDAO {
 	
 	private static final Logger logger = LogManager.getLogger(ComputerDAO.class);
 
-	private ComputerDAO() {
-	}
-
-	private final static ComputerDAO instance = new ComputerDAO();
+//	private ComputerDAO() {
+//	}
+//
+//	private final static ComputerDAO instance = new ComputerDAO();
+//	
+//	public static ComputerDAO getInstance() {
+//		return instance;
+//	}
 	
-	CompanyDAO companyDAO = CompanyDAO.getInstance();
-	ComputerMapper computerMapper = ComputerMapper.getInstance();
-	ConnectPoolVersion poolConnect = ConnectPoolVersion.getInstance();
-
-	public static ComputerDAO getInstance() {
-		return instance;
-	}
+	@Autowired
+	CompanyDAO companyDAO;
+	//= CompanyDAO.getInstance();
+	
+	@Autowired
+	ComputerMapper computerMapper;
+	//= ComputerMapper.getInstance();
+	
+	@Autowired
+	ConnectPoolVersion poolConnect;
+	//= ConnectPoolVersion.getInstance();
 		
 	//alternative1 commentée
 	//String queryCountComputers =  "SELECT COUNT(*) as nbComputers from computer";

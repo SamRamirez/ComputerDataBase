@@ -8,26 +8,30 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
-import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
 import main.java.com.excilys.sramirez.formation.computerdatabase.connection.ConnectPoolVersion;
 
+@Repository
 public class CompanyDAO {
 	
 	private static final Logger logger = LogManager.getLogger(CompanyDAO.class);
 
 	
-	private final static CompanyDAO instance = new CompanyDAO();
-
-	public static CompanyDAO getInstance() {
-		return instance;
-	}
+//	private final static CompanyDAO instance = new CompanyDAO();
+//
+//	public static CompanyDAO getInstance() {
+//		return instance;
+//	}
+//	
+//	private CompanyDAO() {
+//	}
 	
-	private CompanyDAO() {
-	}
-	
-	ConnectPoolVersion poolConnect = ConnectPoolVersion.getInstance();
+	@Autowired
+	ConnectPoolVersion poolConnect;
+	//= ConnectPoolVersion.getInstance();
 	
 	String queryListCompanyFull = "select id, name from company";
 	String queryListCompany = "select id, name from company LIMIT ?, ?";

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.CompanyDTO;
 import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.ComputerDTO;
@@ -18,11 +20,10 @@ import main.java.com.excilys.sramirez.formation.computerdatabase.Mapper.CompanyM
 import main.java.com.excilys.sramirez.formation.computerdatabase.Mapper.ComputerMapper;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
-import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer.ComputerBuilder;
 import main.java.com.excilys.sramirez.formation.computerdatabase.service.CompanyService;
 import main.java.com.excilys.sramirez.formation.computerdatabase.service.ComputerService;
-import main.java.com.excilys.sramirez.formation.computerdatabase.service.Page;
 
+@Controller	
 @WebServlet("/ServletAddComputer")
 public class ServletAddComputer extends HttpServlet {
 	
@@ -30,7 +31,11 @@ public class ServletAddComputer extends HttpServlet {
 	static CompanyService companyService = CompanyService.getInstance();
 	static CompanyMapper companyMapper = CompanyMapper.getInstance();
 	static ComputerMapper computerMapper = ComputerMapper.getInstance();
-	static ComputerService computerService = ComputerService.getInstance();
+	
+	@Autowired
+	private ComputerService computerService;
+	
+	//= ComputerService.getInstance();
 	
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -73,10 +78,22 @@ public class ServletAddComputer extends HttpServlet {
 		Computer c = computerMapper.fromDTO(compuDTO);
 		
 		//changer le service pour que si certains atributs du computer sont à null, ca marche quand meme (on va passer un computer directement en parametre du service et on gere les null autre part)
+		System.out.println(c.toString());
+		System.out.println(computerService);
 		computerService.create(c.getName(), c.getIntroduced(), c.getDiscontinued(), c.getCompany());
-		
 		
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(request,  response);
 	}
+	
+//	@Override
+//	public void init(ServletConfig config) throws ServletException {
+//		super.init(config);
+//		ServletContext servletContext = config.getServletContext();
+//		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+//	    AutowireCapableBeanFactory autowireCapableBeanFactory = webApplicationContext.getAutowireCapableBeanFactory();
+//	    autowireCapableBeanFactory.autowireBean(this);
+//	}
+
+
 	
 }

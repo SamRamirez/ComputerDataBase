@@ -3,6 +3,8 @@ package main.java.com.excilys.sramirez.formation.computerdatabase.servlet;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,20 +13,28 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import main.java.com.excilys.sramirez.formation.computerdatabase.CLI.CommandLines;
 import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.ComputerDTO;
 import main.java.com.excilys.sramirez.formation.computerdatabase.Mapper.ComputerMapper;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
 import main.java.com.excilys.sramirez.formation.computerdatabase.service.ComputerService;
 import main.java.com.excilys.sramirez.formation.computerdatabase.service.Page;
 
+@Controller
 @WebServlet("/ServletDashboard")
 public class ServletDashboard extends HttpServlet {
 	
 	private static final Logger logger = LogManager.getLogger( ServletDashboard.class ) ;
 	
-	static ComputerService computerService = ComputerService.getInstance();
+	@Autowired
+	private ComputerService computerService;
+	
+	//= ComputerService.getInstance();
 	static ComputerMapper computerMapper = ComputerMapper.getInstance();
 	int firstPage = 1;
 	int nbEltsPerPage =  10;
@@ -126,7 +136,16 @@ public class ServletDashboard extends HttpServlet {
 			response.sendRedirect("ServletDashboard");
 	}
 		
-	
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		ServletContext servletContext = config.getServletContext();
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+	    AutowireCapableBeanFactory autowireCapableBeanFactory = webApplicationContext.getAutowireCapableBeanFactory();
+	    autowireCapableBeanFactory.autowireBean(this);
+	}
+
+
 	
 
 }

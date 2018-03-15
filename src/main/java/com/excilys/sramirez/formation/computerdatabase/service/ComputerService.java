@@ -1,30 +1,32 @@
 package main.java.com.excilys.sramirez.formation.computerdatabase.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.DAO.ComputerDAO;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer.ComputerBuilder;
-import main.java.com.excilys.sramirez.formation.computerdatabase.connection.Connect;
 
+@Service
 public class ComputerService {
 	
-	private final static ComputerService instance = new ComputerService();
+//	private final static ComputerService instance = new ComputerService();
+//	
+//	public static ComputerService getInstance() {
+//		return instance;
+//	}
 	
-	public static ComputerService getInstance() {
-		return instance;
-	}
 	
-	
-	private ComputerService() {
-	}
+//	private ComputerService() {
+//	}
 
-	ComputerDAO compDAO = ComputerDAO.getInstance();
+	@Autowired
+	private ComputerDAO compDAO;
+	//= ComputerDAO.getInstance();
 	
 	public int count() {
 		return compDAO.count();
