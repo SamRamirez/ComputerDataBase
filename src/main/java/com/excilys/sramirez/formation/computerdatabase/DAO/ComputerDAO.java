@@ -47,6 +47,7 @@ public class ComputerDAO {
 	String queryUpdateComputer = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id = ? WHERE id = ?";
 	String queryDeleteComputer = "DELETE from computer WHERE id = ?";
 	String queryListComputersFiltered = "SELECT computer.id, computer.name, introduced, discontinued, company.id, company.name FROM computer LEFT JOIN company ON company_id=company.id WHERE computer.name LIKE ? LIMIT ?, ? ";
+	String queryListComputersOrdered = "SELECT computer.id, computer.name, introduced, discontinued, company.id, company.name FROM computer LEFT JOIN company ON company_id=company.id ORDER BY %s ASC LIMIT ?, ? ";
 	
 	public int count() {
 		int toReturn=0;
@@ -76,6 +77,7 @@ public class ComputerDAO {
 	        pstmt.setInt(3, numberOfElements);
 	        pstmt.setString(1, "%"+filter+"%");
 			ResultSet results = pstmt.executeQuery();
+//			System.out.println(pstmt);
 			while (results.next()) {
 				listComp.add(computerMapper.fromResultSetToModel(results));
 			}
@@ -245,5 +247,27 @@ public class ComputerDAO {
 		}
 	}
 	
+	
+	//order by computer.name, introduced, discontinued, company.id
+	public ArrayList<Computer> listOrdered(int page, int numberOfElements, String orderBy){
+ArrayList<Computer> listComp = new ArrayList<Computer>();
+		
+		//try (Connection conn = Connect.getInstance().getConnection();) {
+		try(Connection conn = poolConnect.openConnection();){
+	        PreparedStatement pstmt = conn.prepareStatement(String.format(queryListComputersOrdered, orderBy));
+	        pstmt.setInt(1, 10*(page-1));
+	        pstmt.setInt(2, numberOfElements);
+	        //pstmt.setString(1, orderBy);
+			ResultSet results = pstmt.executeQuery();
+//			System.out.println(pstmt);
+			while (results.next()) {
+				listComp.add(computerMapper.fromResultSetToModel(results));
+				//System.out.println(computerMapper.fromResultSetToModel(results).getName());
+			}
 
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+		return listComp;
+	}
 }

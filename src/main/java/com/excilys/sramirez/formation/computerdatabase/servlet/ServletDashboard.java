@@ -32,21 +32,31 @@ public class ServletDashboard extends HttpServlet {
 	int nbAcessiblePages = 5;
 
 
-	public void listComputersFilterOrNot(HttpServletRequest request, int page){
+	public void listComputersFilterOrOrderedOrNot(HttpServletRequest request, int page){
 		 ArrayList<ComputerDTO> list = new ArrayList<ComputerDTO>();
-		if(request.getParameter("filter") != null) {	
+		if(request.getParameter("filter") != null && request.getParameter("filter") != "") {	
 	    	String filter = request.getParameter("filter");
 	    	request.setAttribute("filter", filter);
+	    	System.out.println("filter = "+filter);
 	    	for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.listFiltered(x, y, filter)).getListElements()) {
 	            list.add(computerMapper.toDTO(c));
 	        }
-	        request.setAttribute("listComputers", list);
-	    }else {
+	        //request.setAttribute("listComputers", list);
+	    }else if(request.getParameter("orderType") != null && request.getParameter("orderType") != "") {
+			String orderType = request.getParameter("orderType");
+			request.setAttribute("orderType", orderType);
+			System.out.println("orderType = "+orderType);
+			for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.listOrdered(x, y, orderType)).getListElements()) {
+	            list.add(computerMapper.toDTO(c));
+	        }
+		}else {
 	        for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.list(x, y)).getListElements()) {
 	            list.add(computerMapper.toDTO(c));
 	        }
-	        request.setAttribute("listComputers", list);
+	        //request.setAttribute("listComputers", list);
 	    }
+		
+        request.setAttribute("listComputers", list);
 	}	
 	
 	/**
@@ -77,7 +87,7 @@ public class ServletDashboard extends HttpServlet {
             page = firstPage;
         }
         request.setAttribute("page", page);
-        listComputersFilterOrNot(request, page);
+        listComputersFilterOrOrderedOrNot(request, page);
 
         //pour le next page et le prévious page
         int localisationPages;

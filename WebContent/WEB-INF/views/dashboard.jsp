@@ -25,6 +25,7 @@
                 <br> page number ${page}
 <%--                 <c:if test = "(${filter == null || filter == \"\" })"> --%>
                 	<br> ${filter == "" || filter == null} true
+                	<br> orderType ${orderType} 
 <%--                 </c:if> --%>
             </h1>
             <div id="actions" class="form-horizontal">
@@ -34,10 +35,13 @@
 						    <input type="search" id="searchbox" name="filter" class="form-control" placeholder="${filter}" />
 							<input type="submit" id="searchsubmit" value="Filter Reset" class="btn btn-primary" />
 						</c:if>
-						<c:if test = "${filter == null || filter == \"\" }">
+						<c:if test = "${ (filter == null || filter == \"\") }">
                         	<input type="search" id="searchbox" name="filter" class="form-control" placeholder="Search name" />
                        		<input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary" />
-                        </c:if>       
+                        </c:if>      
+<%--                         <c:if test = "${orderType != null && orderType != \"\"}"> --%>
+<!--                        		<input type="submit" id="searchsubmit" value="Order Reset" class="btn btn-primary" /> -->
+<%--                         </c:if>    --%>
                     </form>
                 </div>
                 <div class="pull-right">
@@ -68,22 +72,33 @@
                                     </a>
                             </span>
                         </th>
-                        <th>
-                            Computer name
-                        </th>
-                        <th>
-                            Introduced date
-                        </th>
-<!--                         Table header for Discontinued Date -->
-                        <th>
-                            Discontinued date
-                        </th>
-<!--                         Table header for Company -->
-                        <th>
-                            Company
-                        </th>
+                        
+<!--                         <th> -->
+<!--                             Computer name -->
+<!--                         </th> -->
+<!--                         <th> -->
+<!--                             Introduced date -->
+<!--                         </th> -->
+<!-- <!--                         Table header for Discontinued Date --> 
+<!--                         <th> -->
+<!--                             Discontinued date -->
+<!--                         </th> -->
+<!-- <!--                         Table header for Company --> 
+<!--                         <th> -->
+<!--                             Company -->
+<!--                         </th> -->
 
-                    </tr>
+
+
+						<th><a href="ServletDashboard?orderType=computer.name">Computer name</a></th>
+						<th><a href="ServletDashboard?orderType=introduced">Introduced
+								date</a></th>
+						<th><a href="ServletDashboard?orderType=discontinued">Discontinued
+								date</a></th>
+						<th><a href="ServletDashboard?orderType=computer.company_Id">Company</a></th>
+
+
+					</tr>
                 </thead>
                 <!-- Browse attribute computers -->
                 
@@ -124,7 +139,7 @@
 
 				<c:if test = "${localisationPages > 5}">
 					<li><a
-						href="ServletDashboard?localisationNext=${localisationNext - 5 }&page=${page}&localisationPages=${localisationPages}"> 5 previous pages </a>
+						href="ServletDashboard?localisationNext=${localisationNext - 5 }&page=${page}&localisationPages=${localisationPages}&filter=${filter}&orderType=${orderType}"> 5 previous pages </a>
 					</li>
 				</c:if>
 				
@@ -136,7 +151,7 @@
 
 				<c:if test="${localisationPages > 1}">
 					<li><a
-						href="ServletDashboard?localisationNext=${localisationNext}&page=${page-1}&localisationPages=${localisationPages}&filter=${filter}"
+						href="ServletDashboard?localisationNext=${localisationNext}&page=${page-1}&localisationPages=${localisationPages}&filter=${filter}&orderType=${orderType}"
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a>
 					</li>
 				</c:if>
@@ -145,26 +160,26 @@
 				<c:if test="${ (localisationPages + 4) <= (maxPage) }">
 					<c:forEach var="i" begin="${localisationPages}" end="${ localisationPages + 4}">
 						<li><a
-							href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}&filter=${filter}">${i}</a></li>
+							href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}&filter=${filter}&orderType=${orderType}">${i}</a></li>
 					</c:forEach>
 				</c:if>
 				<!--else -->
 				<c:if test="${ (localisationPages + 4) > maxPage}">
 				<c:forEach var="i" begin="${localisationPages}" end="${maxPage}">
 						<li><a
-							href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}&filter=${filter}">${i}</a></li>
+							href="ServletDashboard?page=${i}&localisationPages=${localisationPages}&localisationNext=${localisationNext}&filter=${filter}&orderType=${orderType}">${i}</a></li>
 					</c:forEach>
 				</c:if>
 				
 				<c:if test = "${ localisationPages < maxPage}">
 					<li><a
-						href="ServletDashboard?localisationNext=${localisationNext}&page=${page + 1}&localisationPages=${localisationPages}&filter=${filter}" aria-label="Next"> 
+						href="ServletDashboard?localisationNext=${localisationNext}&page=${page + 1}&localisationPages=${localisationPages}&filter=${filter}&orderType=${orderType}" aria-label="Next"> 
                      <span aria-hidden="true">&raquo;</span></a></li>
 				</c:if>
 
 
 				<c:if test = "${(localisationPages + 4) <= maxPage}">
-					<li><a href="ServletDashboard?localisationNext=${localisationNext + 5 }&page=${page}&localisationPages=${localisationPages}&filter=${filter}"> 5 next pages </a></li>
+					<li><a href="ServletDashboard?localisationNext=${localisationNext + 5 }&page=${page}&localisationPages=${localisationPages}&filter=${filter}&orderType=${orderType}"> 5 next pages </a></li>
 				</c:if>
 
 				<!--               <li> -->

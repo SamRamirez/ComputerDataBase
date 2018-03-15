@@ -31,6 +31,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>com.excilys.formation.cdb.IHM</mainClass>
 		<powermock.version>1.7.1</powermock.version>
+		<spring>5.0.4.RELEASE</spring>
 <!-- 		<failOnMissingWebXml>false</failOnMissingWebXml> -->
 	</properties>
 
@@ -128,6 +129,24 @@
 		<artifactId>HikariCP</artifactId>
 		<version>2.7.8</version>
 	</dependency>
+	
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring}</version>
+        </dependency>
+	
 	
 
 

@@ -82,6 +82,11 @@ public class ComputerService {
 		//passer en parametre de delete un computer plutot qu'un id?  ca sert? ca sert à retourner l'ordi effacé sans refaire de requete?	
 		compDAO.delete(id);
 	}
+	
+	public ArrayList<Computer> listOrdered(int page, int numberOfElements, String orderBy){
+		return compDAO.listOrdered(page, numberOfElements, orderBy);
+		
+	}
 
 
 }
