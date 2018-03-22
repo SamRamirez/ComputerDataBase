@@ -1,28 +1,28 @@
-package main.java.com.excilys.sramirez.formation.computerdatabase.Mapper;
+package main.java.com.excilys.sramirez.formation.computerdatabase.mapper;
 
-import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Component;
+
 import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.ComputerDTO;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer.ComputerBuilder;
-import main.java.com.excilys.sramirez.formation.computerdatabase.service.CompanyService;
-import main.java.com.excilys.sramirez.formation.computerdatabase.service.ComputerService;
 
+@Component
 public class ComputerMapper {
 
-private final static ComputerMapper instance = new ComputerMapper();
-	
-	public static ComputerMapper getInstance() {
-		return instance;
-	}
-	
-	private ComputerMapper() {
-	}
+//private final static ComputerMapper instance = new ComputerMapper();
+//	
+//	public static ComputerMapper getInstance() {
+//		return instance;
+//	}
+//	
+//	private ComputerMapper() {
+//	}
 
 	//je garde ca la pour l'instant mais à priori on n'en aura pas besoin
 //	ComputerService computerService = ComputerService.getInstance();

@@ -20,10 +20,10 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.ComputerDTO;
-import main.java.com.excilys.sramirez.formation.computerdatabase.Mapper.ComputerMapper;
 import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
+import main.java.com.excilys.sramirez.formation.computerdatabase.mapper.ComputerMapper;
 import main.java.com.excilys.sramirez.formation.computerdatabase.service.ComputerService;
-import main.java.com.excilys.sramirez.formation.computerdatabase.service.Page;
+import main.java.com.excilys.sramirez.formation.computerdatabase.service.PageComputer;
 
 @Controller
 @WebServlet("/ServletDashboard")
@@ -33,35 +33,50 @@ public class ServletDashboard extends HttpServlet {
 	
 	@Autowired
 	private ComputerService computerService;
-	
 	//= ComputerService.getInstance();
-	static ComputerMapper computerMapper = ComputerMapper.getInstance();
+	
+	@Autowired
+	private ComputerMapper computerMapper;
+	//= ComputerMapper.getInstance();
+	
+	
 	int firstPage = 1;
 	int nbEltsPerPage =  10;
 	int firstLocalisationPages = 1;
 	int nbAcessiblePages = 5;
 
 
+	@SuppressWarnings("unchecked")
 	public void listComputersFilterOrOrderedOrNot(HttpServletRequest request, int page){
 		 ArrayList<ComputerDTO> list = new ArrayList<ComputerDTO>();
 		if(request.getParameter("filter") != null && request.getParameter("filter") != "") {	
 	    	String filter = request.getParameter("filter");
 	    	request.setAttribute("filter", filter);
 	    	System.out.println("filter = "+filter);
-	    	for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.listFiltered(x, y, filter)).getListElements()) {
-	            list.add(computerMapper.toDTO(c));
+	    	//à enlever a priori
+//	    	for (Computer c : (ArrayList<Computer>) new PageComputer(page, nbEltsPerPage, (x,y) -> computerService.listFiltered(x, y, filter)).getListElements()) {
+	    	//à garder à priori
+//	    	for (Computer c : (ArrayList<Computer>) new PageComputer(page, nbEltsPerPage, computerService.listFiltered(page, nbEltsPerPage, filter)).getListComputers()) {
+	    	for (Computer c : computerService.listFiltered(page, nbEltsPerPage, filter) ) {
+	    		list.add(computerMapper.toDTO(c));
 	        }
 	        //request.setAttribute("listComputers", list);
 	    }else if(request.getParameter("orderType") != null && request.getParameter("orderType") != "") {
 			String orderType = request.getParameter("orderType");
 			request.setAttribute("orderType", orderType);
 			System.out.println("orderType = "+orderType);
-			for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.listOrdered(x, y, orderType)).getListElements()) {
-	            list.add(computerMapper.toDTO(c));
+			//à enlever à priori
+			//for (Computer c : (ArrayList<Computer>) new PageComputer(page, nbEltsPerPage, (x,y) -> computerService.listOrdered(x, y, orderType)).getListElements()) {
+		    //à garder a priori
+			//for (Computer c : (ArrayList<Computer>) new PageComputer(page, nbEltsPerPage, computerService.listOrdered(page, nbEltsPerPage, orderType)).getListComputers()) {
+			for (Computer c : computerService.listOrdered(page, nbEltsPerPage, orderType) ) {
+		    	list.add(computerMapper.toDTO(c));
 	        }
 		}else {
-	        for (Computer c : (ArrayList<Computer>) new Page(page, nbEltsPerPage, (x,y) -> computerService.list(x, y)).getListElements()) {
-	            list.add(computerMapper.toDTO(c));
+	        //à enlever a priori
+			//for (Computer c : (ArrayList<Computer>) new PageComputer(page, nbEltsPerPage, (x,y) -> computerService.list(x, y)).getListElements()) {
+			for (Computer c : computerService.list(page, nbEltsPerPage) ) {  
+				list.add(computerMapper.toDTO(c));
 	        }
 	        //request.setAttribute("listComputers", list);
 	    }

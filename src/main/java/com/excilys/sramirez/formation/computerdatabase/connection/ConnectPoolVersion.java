@@ -1,22 +1,26 @@
 package main.java.com.excilys.sramirez.formation.computerdatabase.connection;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.pool.HikariProxyConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import org.springframework.stereotype.Component;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariProxyConnection;
+
+
+@Component
 public class ConnectPoolVersion {
 
-		private static ConnectPoolVersion instance;
-	    public static ConnectPoolVersion getInstance() {
-	        if (instance == null) {
-	           instance = new ConnectPoolVersion();
-	        }
-	        return instance;
-	    }
-	    private ConnectPoolVersion() { }
+//		private static ConnectPoolVersion instance;
+//	    public static ConnectPoolVersion getInstance() {
+//	        if (instance == null) {
+//	           instance = new ConnectPoolVersion();
+//	        }
+//	        return instance;
+//	    }
+//	    private ConnectPoolVersion() { }
 
 	    HikariDataSource ds;
 

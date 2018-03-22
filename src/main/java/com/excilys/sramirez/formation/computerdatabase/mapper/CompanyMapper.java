@@ -1,22 +1,23 @@
-package main.java.com.excilys.sramirez.formation.computerdatabase.Mapper;
+package main.java.com.excilys.sramirez.formation.computerdatabase.mapper;
 
 import java.util.ArrayList;
 
-import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.CompanyDTO;
-import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.ComputerDTO;
-import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
-import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Computer;
+import org.springframework.stereotype.Component;
 
+import main.java.com.excilys.sramirez.formation.computerdatabase.DTO.CompanyDTO;
+import main.java.com.excilys.sramirez.formation.computerdatabase.bean.Company;
+
+@Component
 public class CompanyMapper {
 	
-private final static CompanyMapper instance = new CompanyMapper();
-	
-	public static CompanyMapper getInstance() {
-		return instance;
-	}
-	
-	private CompanyMapper() {
-	}
+//private final static CompanyMapper instance = new CompanyMapper();
+//	
+//	public static CompanyMapper getInstance() {
+//		return instance;
+//	}
+//	
+//	private CompanyMapper() {
+//	}
 		
 		public CompanyDTO toDTO(Company company) {
 			CompanyDTO companyDTO = new CompanyDTO();
